@@ -520,7 +520,8 @@ fn mu_end(ctx &Mu_Context) {
 	ctx.last_mouse_pos = ctx.mouse_pos
 	// sort root containers by zindex
 	n = ctx.root_list.idx
-	C.qsort(ctx.root_list.items, n, sizeof(&Mu_Container), compare_zindex)
+	// C.qsort(ctx.root_list.items, n, sizeof(&Mu_Container), compare_zindex)
+	ctx.root_list.items[..n].sort_with_compare(compare_zindex)
 	// set root container jump commands
 	for i = 0; i < n; i++ {
 		cnt := ctx.root_list.items[i]
