@@ -192,7 +192,8 @@ struct Mu_Style {
 	colors         [14]Mu_Color
 }
 
-struct Mu_Context {
+pub struct Mu_Context {
+pub mut:
 	// callbacks
 	text_width  fn (Mu_Font, &i8, int) int
 	text_height fn (Mu_Font) int
@@ -259,6 +260,10 @@ struct Mu_Context {
 	input_text     [32]i8
 }
 
+pub fn new_context() &Mu_Context {
+	return C.malloc(sizeof(Mu_Context))
+}
+
 //
 //* Copyright (c) 2024 rxi
 //*
@@ -281,14 +286,14 @@ struct Mu_Context {
 //* IN THE SOFTWARE.
 //
 // incremented after incase `val` uses this value
-fn mu_vec2(x int, y int) Mu_Vec2 {
+pub fn mu_vec2(x int, y int) Mu_Vec2 {
 	res := Mu_Vec2{}
 	res.x = x
 	res.y = y
 	return res
 }
 
-fn mu_rect(x int, y int, w int, h int) Mu_Rect {
+pub fn mu_rect(x int, y int, w int, h int) Mu_Rect {
 	res := Mu_Rect{}
 	res.x = x
 	res.y = y
@@ -297,7 +302,7 @@ fn mu_rect(x int, y int, w int, h int) Mu_Rect {
 	return res
 }
 
-fn mu_color(r int, g int, b int, a int) Mu_Color {
+pub fn mu_color(r int, g int, b int, a int) Mu_Color {
 	res := Mu_Color{}
 	res.r = r
 	res.g = g
@@ -306,11 +311,11 @@ fn mu_color(r int, g int, b int, a int) Mu_Color {
 	return res
 }
 
-fn expand_rect(rect Mu_Rect, n int) Mu_Rect {
+pub fn expand_rect(rect Mu_Rect, n int) Mu_Rect {
 	return mu_rect(rect.x - n, rect.y - n, rect.w + n * 2, rect.h + n * 2)
 }
 
-fn intersect_rects(r1 Mu_Rect, r2 Mu_Rect) Mu_Rect {
+pub fn intersect_rects(r1 Mu_Rect, r2 Mu_Rect) Mu_Rect {
 	x1 := (if (r1.x) > (r2.x) { (r1.x) } else { (r2.x) })
 	y1 := (if (r1.y) > (r2.y) { (r1.y) } else { (r2.y) })
 	x2 := (if (r1.x + r1.w) < (r2.x + r2.w) { (r1.x + r1.w) } else { (r2.x + r2.w) })
@@ -324,11 +329,11 @@ fn intersect_rects(r1 Mu_Rect, r2 Mu_Rect) Mu_Rect {
 	return mu_rect(x1, y1, x2 - x1, y2 - y1)
 }
 
-fn rect_overlaps_vec2(r Mu_Rect, p Mu_Vec2) bool {
+pub fn rect_overlaps_vec2(r Mu_Rect, p Mu_Vec2) bool {
 	return p.x >= r.x && p.x < r.x + r.w && p.y >= r.y && p.y < r.y + r.h
 }
 
-fn draw_frame(ctx &Mu_Context, rect Mu_Rect, colorid int) {
+pub fn draw_frame(ctx &Mu_Context, rect Mu_Rect, colorid int) {
 	mu_draw_rect(ctx, rect, ctx.style.colors[colorid])
 	if colorid == mu_color_scrollbase || colorid == mu_color_scrollthumb
 		|| colorid == mu_color_titlebg {
@@ -340,14 +345,14 @@ fn draw_frame(ctx &Mu_Context, rect Mu_Rect, colorid int) {
 	}
 }
 
-fn mu_init(ctx &Mu_Context) {
+pub fn mu_init(ctx &Mu_Context) {
 	C.memset(ctx, 0, sizeof(*ctx))
 	ctx.draw_frame = draw_frame
 	ctx._style = default_style
 	ctx.style = &ctx._style
 }
 
-fn mu_begin(ctx &Mu_Context) {
+pub fn mu_begin(ctx &Mu_Context) {
 	// assert (ctx.text_width && ctx.text_height);
 
 	ctx.command_list.idx = 0
@@ -360,11 +365,11 @@ fn mu_begin(ctx &Mu_Context) {
 	ctx.frame++
 }
 
-fn compare_zindex(a &&Mu_Container, b &&Mu_Container) int {
+pub fn compare_zindex(a &&Mu_Container, b &&Mu_Container) int {
 	return (*&&Mu_Container(a)).zindex - (*&&Mu_Container(b)).zindex
 }
 
-fn mu_end(ctx &Mu_Context) {
+pub fn mu_end(ctx &Mu_Context) {
 	i := 0
 	n := 0
 
@@ -418,13 +423,13 @@ fn mu_end(ctx &Mu_Context) {
 	}
 }
 
-fn mu_set_focus(ctx &Mu_Context, id Mu_Id) {
+pub fn mu_set_focus(ctx &Mu_Context, id Mu_Id) {
 	ctx.focus = id
 	ctx.updated_focus = 1
 }
 
 // 32bit fnv-1a hash
-fn hash(hash &Mu_Id, data voidptr, size int) {
+pub fn hash(hash &Mu_Id, data voidptr, size int) {
 	// p := data
 	mut p := &u8(data)
 	// for size-- {
@@ -434,7 +439,7 @@ fn hash(hash &Mu_Id, data voidptr, size int) {
 	}
 }
 
-fn mu_get_id(ctx &Mu_Context, data voidptr, size int) Mu_Id {
+pub fn mu_get_id(ctx &Mu_Context, data voidptr, size int) Mu_Id {
 	idx := ctx.id_stack.idx
 	res := if (idx > 0) { ctx.id_stack.items[idx - 1] } else { 2166136261 }
 	hash(&res, data, size)
@@ -442,37 +447,37 @@ fn mu_get_id(ctx &Mu_Context, data voidptr, size int) Mu_Id {
 	return res
 }
 
-fn mu_push_id(ctx &Mu_Context, data voidptr, size int) {
+pub fn mu_push_id(ctx &Mu_Context, data voidptr, size int) {
 	(ctx.id_stack).items[(ctx.id_stack).idx] = (mu_get_id(ctx, data, size))
 	(ctx.id_stack).idx++
 	assert ctx.id_stack.idx < ctx.id_stack.items.len;
 }
 
-fn mu_pop_id(ctx &Mu_Context) {
+pub fn mu_pop_id(ctx &Mu_Context) {
 	(ctx.id_stack).idx--
 	assert ctx.id_stack.idx > 0;
 }
 
-fn mu_push_clip_rect(ctx &Mu_Context, rect Mu_Rect) {
+pub fn mu_push_clip_rect(ctx &Mu_Context, rect Mu_Rect) {
 	last := mu_get_clip_rect(ctx)
 	(ctx.clip_stack).items[(ctx.clip_stack).idx] = (intersect_rects(rect, last))
 	(ctx.clip_stack).idx++
 	assert ((ctx.clip_stack).idx < ctx.clip_stack.items.len);
 }
 
-fn mu_pop_clip_rect(ctx &Mu_Context) {
+pub fn mu_pop_clip_rect(ctx &Mu_Context) {
 	for {
 		assert ((ctx.clip_stack).idx > 0);
 		(ctx.clip_stack).idx--
 	}
 }
 
-fn mu_get_clip_rect(ctx &Mu_Context) Mu_Rect {
+pub fn mu_get_clip_rect(ctx &Mu_Context) Mu_Rect {
 	assert (ctx.clip_stack.idx > 0);
 	return ctx.clip_stack.items[ctx.clip_stack.idx - 1]
 }
 
-fn mu_check_clip(ctx &Mu_Context, r Mu_Rect) int {
+pub fn mu_check_clip(ctx &Mu_Context, r Mu_Rect) int {
 	cr := mu_get_clip_rect(ctx)
 	if r.x > cr.x + cr.w || r.x + r.w < cr.x || r.y > cr.y + cr.h || r.y + r.h < cr.y {
 		return mu_clip_all
@@ -483,7 +488,7 @@ fn mu_check_clip(ctx &Mu_Context, r Mu_Rect) int {
 	return mu_clip_part
 }
 
-fn push_layout(ctx &Mu_Context, body Mu_Rect, scroll Mu_Vec2) {
+pub fn push_layout(ctx &Mu_Context, body Mu_Rect, scroll Mu_Vec2) {
 	layout := Mu_Layout{}
 	width := 0
 	C.memset(&layout, 0, sizeof(layout))
@@ -497,11 +502,11 @@ fn push_layout(ctx &Mu_Context, body Mu_Rect, scroll Mu_Vec2) {
 	mu_layout_row(ctx, 1, &width, 0)
 }
 
-fn get_layout(ctx &Mu_Context) &Mu_Layout {
+pub fn get_layout(ctx &Mu_Context) &Mu_Layout {
 	return &ctx.layout_stack.items[ctx.layout_stack.idx - 1]
 }
 
-fn pop_container(ctx &Mu_Context) {
+pub fn pop_container(ctx &Mu_Context) {
 	cnt := mu_get_current_container(ctx)
 	layout := get_layout(ctx)
 	cnt.content_size.x = layout.max.x - layout.body.x
@@ -516,12 +521,12 @@ fn pop_container(ctx &Mu_Context) {
 	mu_pop_id(ctx)
 }
 
-fn mu_get_current_container(ctx &Mu_Context) &Mu_Container {
+pub fn mu_get_current_container(ctx &Mu_Context) &Mu_Container {
 	assert ctx.container_stack.idx > 0
 	return ctx.container_stack.items[ctx.container_stack.idx - 1]
 }
 
-fn get_container(ctx &Mu_Context, id Mu_Id, opt int) ?&Mu_Container {
+pub fn get_container(ctx &Mu_Context, id Mu_Id, opt int) ?&Mu_Container {
 	cnt := &Mu_Container(0)
 	// try to get existing container from pool
 	idx := mu_pool_get(ctx, ctx.container_pool, 48, id)
@@ -543,19 +548,19 @@ fn get_container(ctx &Mu_Context, id Mu_Id, opt int) ?&Mu_Container {
 	return cnt
 }
 
-fn mu_get_container(ctx &Mu_Context, name &i8) ?&Mu_Container {
+pub fn mu_get_container(ctx &Mu_Context, name &i8) ?&Mu_Container {
 	id := mu_get_id(ctx, name, C.strlen(name))
 	return get_container(ctx, id, 0)
 }
 
-fn mu_bring_to_front(ctx &Mu_Context, cnt &Mu_Container) {
+pub fn mu_bring_to_front(ctx &Mu_Context, cnt &Mu_Container) {
 	cnt.zindex = ctx.last_zindex++$
 }
 
 //============================================================================
 //* pool
 //*============================================================================
-fn mu_pool_init(ctx &Mu_Context, items &Mu_PoolItem, len int, id Mu_Id) int {
+pub fn mu_pool_init(ctx &Mu_Context, items &Mu_PoolItem, len int, id Mu_Id) int {
 	i := 0
 	n := -1
 	f := ctx.frame
@@ -572,7 +577,7 @@ fn mu_pool_init(ctx &Mu_Context, items &Mu_PoolItem, len int, id Mu_Id) int {
 	return n
 }
 
-fn mu_pool_get(ctx &Mu_Context, items &Mu_PoolItem, len int, id Mu_Id) int {
+pub fn mu_pool_get(ctx &Mu_Context, items &Mu_PoolItem, len int, id Mu_Id) int {
 	i := 0
 	// (void((ctx)))
 	for i = 0; i < len; i++ {
@@ -583,43 +588,43 @@ fn mu_pool_get(ctx &Mu_Context, items &Mu_PoolItem, len int, id Mu_Id) int {
 	return -1
 }
 
-fn mu_pool_update(ctx &Mu_Context, items &Mu_PoolItem, idx int) {
+pub fn mu_pool_update(ctx &Mu_Context, items &Mu_PoolItem, idx int) {
 	items[idx].last_update = ctx.frame
 }
 
 //============================================================================
 //* input handlers
 //*============================================================================
-fn mu_input_mousemove(ctx &Mu_Context, x int, y int) {
+pub fn mu_input_mousemove(ctx &Mu_Context, x int, y int) {
 	ctx.mouse_pos = mu_vec2(x, y)
 }
 
-fn mu_input_mousedown(ctx &Mu_Context, x int, y int, btn int) {
+pub fn mu_input_mousedown(ctx &Mu_Context, x int, y int, btn int) {
 	mu_input_mousemove(ctx, x, y)
 	ctx.mouse_down |= btn
 	ctx.mouse_pressed |= btn
 }
 
-fn mu_input_mouseup(ctx &Mu_Context, x int, y int, btn int) {
+pub fn mu_input_mouseup(ctx &Mu_Context, x int, y int, btn int) {
 	mu_input_mousemove(ctx, x, y)
 	ctx.mouse_down &= ~btn
 }
 
-fn mu_input_scroll(ctx &Mu_Context, x int, y int) {
+pub fn mu_input_scroll(ctx &Mu_Context, x int, y int) {
 	ctx.scroll_delta.x += x
 	ctx.scroll_delta.y += y
 }
 
-fn mu_input_keydown(ctx &Mu_Context, key int) {
+pub fn mu_input_keydown(ctx &Mu_Context, key int) {
 	ctx.key_pressed |= key
 	ctx.key_down |= key
 }
 
-fn mu_input_keyup(ctx &Mu_Context, key int) {
+pub fn mu_input_keyup(ctx &Mu_Context, key int) {
 	ctx.key_down &= ~key
 }
 
-fn mu_input_text(ctx &Mu_Context, text &i8) {
+pub fn mu_input_text(ctx &Mu_Context, text &i8) {
 	len := C.strlen(ctx.input_text)
 	size := C.strlen(text) + 1
 	assert (len + size <= int(sizeof(ctx.input_text)));
@@ -629,7 +634,7 @@ fn mu_input_text(ctx &Mu_Context, text &i8) {
 //============================================================================
 //* commandlist
 //*============================================================================
-fn mu_push_command(ctx &Mu_Context, type_ int, size int) &Mu_Command {
+pub fn mu_push_command(ctx &Mu_Context, type_ int, size int) &Mu_Command {
 	cmd := unsafe { &Mu_Command(&int(ctx.command_list.items) + ctx.command_list.idx) }
 	assert (ctx.command_list.idx + size < (256 * 1024));
 	cmd.base.type_ = type_
@@ -638,7 +643,7 @@ fn mu_push_command(ctx &Mu_Context, type_ int, size int) &Mu_Command {
 	return cmd
 }
 
-fn mu_next_command(ctx &Mu_Context, cmd &&Mu_Command) int {
+pub fn mu_next_command(ctx &Mu_Context, cmd &&Mu_Command) int {
 	if *cmd {
 		*cmd = unsafe { &Mu_Command(((&int(*cmd)) + (*cmd).base.size)) }
 	} else {
@@ -653,20 +658,20 @@ fn mu_next_command(ctx &Mu_Context, cmd &&Mu_Command) int {
 	return 0
 }
 
-fn push_jump(ctx &Mu_Context, dst &Mu_Command) &Mu_Command {
+pub fn push_jump(ctx &Mu_Context, dst &Mu_Command) &Mu_Command {
 	cmd := &Mu_Command(0)
 	cmd = mu_push_command(ctx, mu_command_jump, sizeof(Mu_JumpCommand))
 	cmd.jump.dst = dst
 	return cmd
 }
 
-fn mu_set_clip(ctx &Mu_Context, rect Mu_Rect) {
+pub fn mu_set_clip(ctx &Mu_Context, rect Mu_Rect) {
 	cmd := &Mu_Command(0)
 	cmd = mu_push_command(ctx, mu_command_clip, sizeof(Mu_ClipCommand))
 	cmd.clip.rect = rect
 }
 
-fn mu_draw_rect(ctx &Mu_Context, rect Mu_Rect, color Mu_Color) {
+pub fn mu_draw_rect(ctx &Mu_Context, rect Mu_Rect, color Mu_Color) {
 	cmd := &Mu_Command(0)
 	rect = intersect_rects(rect, mu_get_clip_rect(ctx))
 	if rect.w > 0 && rect.h > 0 {
@@ -676,14 +681,14 @@ fn mu_draw_rect(ctx &Mu_Context, rect Mu_Rect, color Mu_Color) {
 	}
 }
 
-fn mu_draw_box(ctx &Mu_Context, rect Mu_Rect, color Mu_Color) {
+pub fn mu_draw_box(ctx &Mu_Context, rect Mu_Rect, color Mu_Color) {
 	mu_draw_rect(ctx, mu_rect(rect.x + 1, rect.y, rect.w - 2, 1), color)
 	mu_draw_rect(ctx, mu_rect(rect.x + 1, rect.y + rect.h - 1, rect.w - 2, 1), color)
 	mu_draw_rect(ctx, mu_rect(rect.x, rect.y, 1, rect.h), color)
 	mu_draw_rect(ctx, mu_rect(rect.x + rect.w - 1, rect.y, 1, rect.h), color)
 }
 
-fn mu_draw_text(ctx &Mu_Context, font Mu_Font, str &i8, len int, pos Mu_Vec2, color Mu_Color) {
+pub fn mu_draw_text(ctx &Mu_Context, font Mu_Font, str &i8, len int, pos Mu_Vec2, color Mu_Color) {
 	cmd := &Mu_Command(0)
 	rect := mu_rect(pos.x, pos.y, ctx.text_width(font, str, len), ctx.text_height(font))
 	clipped := mu_check_clip(ctx, rect)
@@ -710,7 +715,7 @@ fn mu_draw_text(ctx &Mu_Context, font Mu_Font, str &i8, len int, pos Mu_Vec2, co
 	}
 }
 
-fn mu_draw_icon(ctx &Mu_Context, id int, rect Mu_Rect, color Mu_Color) {
+pub fn mu_draw_icon(ctx &Mu_Context, id int, rect Mu_Rect, color Mu_Color) {
 	cmd := &Mu_Command(0)
 	// do clip command if the rect isn't fully contained within the cliprect
 	clipped := mu_check_clip(ctx, rect)
@@ -739,11 +744,11 @@ fn mu_draw_icon(ctx &Mu_Context, id int, rect Mu_Rect, color Mu_Color) {
 const relative = 1
 const absolute = 2
 
-fn mu_layout_begin_column(ctx &Mu_Context) {
+pub fn mu_layout_begin_column(ctx &Mu_Context) {
 	push_layout(ctx, mu_layout_next(ctx), mu_vec2(0, 0))
 }
 
-fn mu_layout_end_column(ctx &Mu_Context) {
+pub fn mu_layout_end_column(ctx &Mu_Context) {
 	a := &Mu_Layout(0)
 	b := &Mu_Layout(0)
 
@@ -768,7 +773,7 @@ fn mu_layout_end_column(ctx &Mu_Context) {
 	a.max.y = (if (a.max.y) > (b.max.y) { (a.max.y) } else { (b.max.y) })
 }
 
-fn mu_layout_row(ctx &Mu_Context, items int, widths &int, height int) {
+pub fn mu_layout_row(ctx &Mu_Context, items int, widths &int, height int) {
 	layout := get_layout(ctx)
 	s := int(sizeof(widths[0]))
 	// s := 4
@@ -782,21 +787,21 @@ fn mu_layout_row(ctx &Mu_Context, items int, widths &int, height int) {
 	layout.item_index = 0
 }
 
-fn mu_layout_width(ctx &Mu_Context, width int) {
+pub fn mu_layout_width(ctx &Mu_Context, width int) {
 	get_layout(ctx).size.x = width
 }
 
-fn mu_layout_height(ctx &Mu_Context, height int) {
+pub fn mu_layout_height(ctx &Mu_Context, height int) {
 	get_layout(ctx).size.y = height
 }
 
-fn mu_layout_set_next(ctx &Mu_Context, r Mu_Rect, relative int) {
+pub fn mu_layout_set_next(ctx &Mu_Context, r Mu_Rect, relative int) {
 	layout := get_layout(ctx)
 	layout.next = r
 	layout.next_type = if relative { relative } else { absolute }
 }
 
-fn mu_layout_next(ctx &Mu_Context) Mu_Rect {
+pub fn mu_layout_next(ctx &Mu_Context) Mu_Rect {
 	layout := get_layout(ctx)
 	style := ctx.style
 	res := Mu_Rect{}
@@ -854,7 +859,7 @@ fn mu_layout_next(ctx &Mu_Context) Mu_Rect {
 //============================================================================
 //* controls
 //*============================================================================
-fn in_hover_root(ctx &Mu_Context) bool {
+pub fn in_hover_root(ctx &Mu_Context) bool {
 	i := ctx.container_stack.idx
 	for i-- {
 		if ctx.container_stack.items[i] == ctx.hover_root {
@@ -869,7 +874,7 @@ fn in_hover_root(ctx &Mu_Context) bool {
 	return false
 }
 
-fn mu_draw_control_frame(ctx &Mu_Context, id Mu_Id, rect Mu_Rect, colorid int, opt int) {
+pub fn mu_draw_control_frame(ctx &Mu_Context, id Mu_Id, rect Mu_Rect, colorid int, opt int) {
 	if opt & mu_opt_noframe {
 		return
 	}
@@ -881,7 +886,7 @@ fn mu_draw_control_frame(ctx &Mu_Context, id Mu_Id, rect Mu_Rect, colorid int, o
 	ctx.draw_frame(ctx, rect, colorid)
 }
 
-fn mu_draw_control_text(ctx &Mu_Context, str &i8, rect Mu_Rect, colorid int, opt int) {
+pub fn mu_draw_control_text(ctx &Mu_Context, str &i8, rect Mu_Rect, colorid int, opt int) {
 	pos := Mu_Vec2{}
 	font := ctx.style.font
 	tw := ctx.text_width(font, str, -1)
@@ -898,12 +903,12 @@ fn mu_draw_control_text(ctx &Mu_Context, str &i8, rect Mu_Rect, colorid int, opt
 	mu_pop_clip_rect(ctx)
 }
 
-fn mu_mouse_over(ctx &Mu_Context, rect Mu_Rect) bool {
+pub fn mu_mouse_over(ctx &Mu_Context, rect Mu_Rect) bool {
 	return rect_overlaps_vec2(rect, ctx.mouse_pos)
 		&& rect_overlaps_vec2(mu_get_clip_rect(ctx), ctx.mouse_pos) && in_hover_root(ctx)
 }
 
-fn mu_update_control(ctx &Mu_Context, id Mu_Id, rect Mu_Rect, opt int) {
+pub fn mu_update_control(ctx &Mu_Context, id Mu_Id, rect Mu_Rect, opt int) {
 	mouseover := mu_mouse_over(ctx, rect)
 	if ctx.focus == id {
 		ctx.updated_focus = 1
@@ -931,7 +936,7 @@ fn mu_update_control(ctx &Mu_Context, id Mu_Id, rect Mu_Rect, opt int) {
 	}
 }
 
-fn mu_text(ctx &Mu_Context, text &i8) {
+pub fn mu_text(ctx &Mu_Context, text &i8) {
 	start := &i8(0)
 	end := &i8(0)
 	p := text
@@ -972,11 +977,12 @@ fn mu_text(ctx &Mu_Context, text &i8) {
 	mu_layout_end_column(ctx)
 }
 
-fn mu_label(ctx &Mu_Context, text &i8) {
-	mu_draw_control_text(ctx, text, mu_layout_next(ctx), mu_color_text, 0)
+pub fn mu_label(ctx &Mu_Context, text string) {
+	text_i8 := text.bytes().map(i8(it))
+	mu_draw_control_text(ctx, text_i8, mu_layout_next(ctx), mu_color_text, 0)
 }
 
-fn mu_button_ex(ctx &Mu_Context, label &i8, icon int, opt int) int {
+pub fn mu_button_ex(ctx &Mu_Context, label &i8, icon int, opt int) int {
 	res := 0
 	id := if label {
 		mu_get_id(ctx, label, C.strlen(label))
@@ -1000,7 +1006,7 @@ fn mu_button_ex(ctx &Mu_Context, label &i8, icon int, opt int) int {
 	return res
 }
 
-fn mu_checkbox(ctx &Mu_Context, label &i8, state &int) int {
+pub fn mu_checkbox(ctx &Mu_Context, label &i8, state &int) int {
 	res := 0
 	id := mu_get_id(ctx, &state, sizeof(state))
 	r := mu_layout_next(ctx)
@@ -1021,7 +1027,7 @@ fn mu_checkbox(ctx &Mu_Context, label &i8, state &int) int {
 	return res
 }
 
-fn mu_textbox_raw(ctx &Mu_Context, buf &i8, bufsz int, id Mu_Id, r Mu_Rect, opt int) int {
+pub fn mu_textbox_raw(ctx &Mu_Context, buf &i8, bufsz int, id Mu_Id, r Mu_Rect, opt int) int {
 	res := 0
 	mu_update_control(ctx, id, r, opt | mu_opt_holdfocus)
 	if ctx.focus == id {
@@ -1073,7 +1079,7 @@ fn mu_textbox_raw(ctx &Mu_Context, buf &i8, bufsz int, id Mu_Id, r Mu_Rect, opt 
 	return res
 }
 
-fn number_textbox(ctx &Mu_Context, value &Mu_Real, r Mu_Rect, id Mu_Id) int {
+pub fn number_textbox(ctx &Mu_Context, value &Mu_Real, r Mu_Rect, id Mu_Id) int {
 	if ctx.mouse_pressed == mu_mouse_left && ctx.key_down & mu_key_shift && ctx.hover == id {
 		ctx.number_edit = id
 		C.sprintf(ctx.number_edit_buf, c'%.3g', *value)
@@ -1093,13 +1099,13 @@ fn number_textbox(ctx &Mu_Context, value &Mu_Real, r Mu_Rect, id Mu_Id) int {
 	return 0
 }
 
-fn mu_textbox_ex(ctx &Mu_Context, buf &i8, bufsz int, opt int) int {
+pub fn mu_textbox_ex(ctx &Mu_Context, buf &i8, bufsz int, opt int) int {
 	id := mu_get_id(ctx, &buf, sizeof(buf))
 	r := mu_layout_next(ctx)
 	return mu_textbox_raw(ctx, buf, bufsz, id, r, opt)
 }
 
-fn mu_slider_ex(ctx &Mu_Context, value &Mu_Real, low Mu_Real, high Mu_Real, step Mu_Real, fmt &i8, opt int) int {
+pub fn mu_slider_ex(ctx &Mu_Context, value &Mu_Real, low Mu_Real, high Mu_Real, step Mu_Real, fmt &i8, opt int) int {
 	buf := [128]i8{}
 	thumb := Mu_Rect{}
 	x := 0
@@ -1145,7 +1151,7 @@ fn mu_slider_ex(ctx &Mu_Context, value &Mu_Real, low Mu_Real, high Mu_Real, step
 	return res
 }
 
-fn mu_number_ex(ctx &Mu_Context, value &Mu_Real, step Mu_Real, fmt &i8, opt int) int {
+pub fn mu_number_ex(ctx &Mu_Context, value &Mu_Real, step Mu_Real, fmt &i8, opt int) int {
 	buf := [128]i8{}
 	res := 0
 	id := mu_get_id(ctx, &value, sizeof(value))
@@ -1173,7 +1179,7 @@ fn mu_number_ex(ctx &Mu_Context, value &Mu_Real, step Mu_Real, fmt &i8, opt int)
 	return res
 }
 
-fn header(ctx &Mu_Context, label &i8, istreenode int, opt int) int {
+pub fn header(ctx &Mu_Context, label &i8, istreenode int, opt int) int {
 	r := Mu_Rect{}
 	active := 0
 	expanded := 0
@@ -1214,11 +1220,11 @@ fn header(ctx &Mu_Context, label &i8, istreenode int, opt int) int {
 	return if expanded { mu_res_active } else { 0 }
 }
 
-fn mu_header_ex(ctx &Mu_Context, label &i8, opt int) int {
+pub fn mu_header_ex(ctx &Mu_Context, label &i8, opt int) int {
 	return header(ctx, label, 0, opt)
 }
 
-fn mu_begin_treenode_ex(ctx &Mu_Context, label &i8, opt int) int {
+pub fn mu_begin_treenode_ex(ctx &Mu_Context, label &i8, opt int) int {
 	res := header(ctx, label, 1, opt)
 	if res & mu_res_active {
 		get_layout(ctx).indent += ctx.style.indent;
@@ -1229,7 +1235,7 @@ fn mu_begin_treenode_ex(ctx &Mu_Context, label &i8, opt int) int {
 	return res
 }
 
-fn mu_end_treenode(ctx &Mu_Context) {
+pub fn mu_end_treenode(ctx &Mu_Context) {
 	get_layout(ctx).indent -= ctx.style.indent
 	mu_pop_id(ctx)
 }
@@ -1241,7 +1247,7 @@ fn mu_end_treenode(ctx &Mu_Context) {
 // draw base and thumb
 // set this as the scroll_target (will get scrolled on mousewheel)
 // if the mouse is over it
-fn scrollbars(ctx &Mu_Context, cnt &Mu_Container, body &Mu_Rect) {
+pub fn scrollbars(ctx &Mu_Context, cnt &Mu_Container, body &Mu_Rect) {
 	sz := ctx.style.scrollbar_size
 	cs := cnt.content_size
 	cs.x += ctx.style.padding * 2
@@ -1333,7 +1339,7 @@ fn scrollbars(ctx &Mu_Context, cnt &Mu_Container, body &Mu_Rect) {
 	mu_pop_clip_rect(ctx)
 }
 
-fn push_container_body(ctx &Mu_Context, cnt &Mu_Container, body Mu_Rect, opt int) {
+pub fn push_container_body(ctx &Mu_Context, cnt &Mu_Container, body Mu_Rect, opt int) {
 	if ~opt & mu_opt_noscroll {
 		scrollbars(ctx, cnt, &body)
 	}
@@ -1341,7 +1347,7 @@ fn push_container_body(ctx &Mu_Context, cnt &Mu_Container, body Mu_Rect, opt int
 	cnt.body = body
 }
 
-fn begin_root_container(ctx &Mu_Context, cnt &Mu_Container) {
+pub fn begin_root_container(ctx &Mu_Context, cnt &Mu_Container) {
 	(ctx.container_stack).items[(ctx.container_stack).idx] = cnt
 	(ctx.container_stack).idx++
 	assert (ctx.container_stack).idx < ctx.container_stack.items.len;
@@ -1369,7 +1375,7 @@ fn begin_root_container(ctx &Mu_Context, cnt &Mu_Container) {
 	}
 }
 
-fn end_root_container(ctx &Mu_Context) {
+pub fn end_root_container(ctx &Mu_Context) {
 	// push tail 'goto' jump command and set head 'skip' command. the final steps
 	//  * on initing these are done in mu_end()
 	cnt := mu_get_current_container(ctx)
@@ -1380,12 +1386,17 @@ fn end_root_container(ctx &Mu_Context) {
 	pop_container(ctx)
 }
 
-fn mu_begin_window_ex(ctx &Mu_Context, title &i8, rect Mu_Rect, opt int) int {
+pub fn mu_begin_window_ex(ctx &Mu_Context, title string, rect Mu_Rect, opt int) bool {
+	title_i8 := title.bytes().map(i8(it))
+	return mu_begin_window_ex_impl(ctx, title_i8, rect, opt)
+}
+
+fn mu_begin_window_ex_impl(ctx &Mu_Context, title_i8 []i8, rect Mu_Rect, opt int) bool {
 	body := Mu_Rect{}
-	id := mu_get_id(ctx, title, C.strlen(title))
-	cnt := get_container(ctx, id, opt) or { return 0 }
+	id := mu_get_id(ctx, &title_i8, C.strlen(title_i8))
+	cnt := get_container(ctx, id, opt) or { return false }
 	if !cnt.open {
-		return 0
+		return false
 	}
 
 	(ctx.id_stack).items[(ctx.id_stack).idx] = id
@@ -1411,7 +1422,7 @@ fn mu_begin_window_ex(ctx &Mu_Context, title &i8, rect Mu_Rect, opt int) int {
 		if ~opt & mu_opt_notitle {
 			id2 := mu_get_id(ctx, c'!title', 6)
 			mu_update_control(ctx, id2, tr, opt)
-			mu_draw_control_text(ctx, title, tr, mu_color_titletext, opt)
+			mu_draw_control_text(ctx, title_i8, tr, mu_color_titletext, opt)
 			if id2 == ctx.focus && ctx.mouse_down == mu_mouse_left {
 				cnt.rect.x += ctx.mouse_delta.x
 				cnt.rect.y += ctx.mouse_delta.y
@@ -1462,15 +1473,15 @@ fn mu_begin_window_ex(ctx &Mu_Context, title &i8, rect Mu_Rect, opt int) int {
 		cnt.open = false
 	}
 	mu_push_clip_rect(ctx, cnt.body)
-	return mu_res_active
+	return bool(mu_res_active)
 }
 
-fn mu_end_window(ctx &Mu_Context) {
+pub fn mu_end_window(ctx &Mu_Context) {
 	mu_pop_clip_rect(ctx)
 	end_root_container(ctx)
 }
 
-fn mu_open_popup(ctx &Mu_Context, name &i8) {
+pub fn mu_open_popup(ctx &Mu_Context, name &i8) {
 	cnt := mu_get_container(ctx, name) or { panic(err) }
 	// set as hover root so popup isn't closed in begin_window_ex()
 	ctx.hover_root = cnt
@@ -1481,16 +1492,16 @@ fn mu_open_popup(ctx &Mu_Context, name &i8) {
 	mu_bring_to_front(ctx, cnt)
 }
 
-fn mu_begin_popup(ctx &Mu_Context, name &i8) int {
+pub fn mu_begin_popup(ctx &Mu_Context, name string) bool {
 	opt := mu_opt_popup | mu_opt_autosize | mu_opt_noresize | mu_opt_noscroll | mu_opt_notitle | mu_opt_closed
 	return mu_begin_window_ex(ctx, name, mu_rect(0, 0, 0, 0), opt)
 }
 
-fn mu_end_popup(ctx &Mu_Context) {
+pub fn mu_end_popup(ctx &Mu_Context) {
 	mu_end_window(ctx)
 }
 
-fn mu_begin_panel_ex(ctx &Mu_Context, name &i8, opt int) {
+pub fn mu_begin_panel_ex(ctx &Mu_Context, name &i8, opt int) {
 	cnt := &Mu_Container(0)
 	mu_push_id(ctx, name, C.strlen(name))
 	cnt = get_container(ctx, ctx.last_id, opt) or { panic(err) }
@@ -1507,7 +1518,7 @@ fn mu_begin_panel_ex(ctx &Mu_Context, name &i8, opt int) {
 	mu_push_clip_rect(ctx, cnt.body)
 }
 
-fn mu_end_panel(ctx &Mu_Context) {
+pub fn mu_end_panel(ctx &Mu_Context) {
 	mu_pop_clip_rect(ctx)
 	pop_container(ctx)
 }
