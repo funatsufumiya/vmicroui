@@ -445,7 +445,7 @@ fn intersect_rects(r1 Mu_Rect, r2 Mu_Rect) Mu_Rect {
 	return mu_rect(x1, y1, x2 - x1, y2 - y1)
 }
 
-fn rect_overlaps_vec2(r Mu_Rect, p Mu_Vec2) int {
+fn rect_overlaps_vec2(r Mu_Rect, p Mu_Vec2) bool {
 	return p.x >= r.x && p.x < r.x + r.w && p.y >= r.y && p.y < r.y + r.h
 }
 
@@ -529,7 +529,7 @@ fn mu_end(ctx &Mu_Context) {
 			cmd.jump.dst = unsafe { &i8(cnt.head) + sizeof(Mu_JumpCommand) }
 		} else {
 			prev := ctx.root_list.items[i - 1]
-			prev.tail.jump.dst = &i8(cnt.head) + sizeof(Mu_JumpCommand)
+			prev.tail.jump.dst = unsafe { &i8(cnt.head) + sizeof(Mu_JumpCommand) }
 		}
 		// make the last container's tail jump to the end of command list
 		if i == n - 1 {
@@ -757,11 +757,11 @@ fn mu_push_command(ctx &Mu_Context, type_ int, size int) &Mu_Command {
 
 fn mu_next_command(ctx &Mu_Context, cmd &&Mu_Command) int {
 	if *cmd {
-		*cmd = &Mu_Command(((&i8(*cmd)) + (*cmd).base.size))
+		*cmd = unsafe { &Mu_Command(((&i8(*cmd)) + (*cmd).base.size)) }
 	} else {
 		*cmd = &Mu_Command(ctx.command_list.items)
 	}
-	for &i8(*cmd) != ctx.command_list.items + ctx.command_list.idx {
+	for unsafe {&i8(*cmd)} != ctx.command_list.items + ctx.command_list.idx {
 		if (*cmd).type_ != mu_command_jump {
 			return 1
 		}
@@ -968,11 +968,11 @@ fn mu_layout_next(ctx &Mu_Context) Mu_Rect {
 //============================================================================
 //* controls
 //*============================================================================
-fn in_hover_root(ctx &Mu_Context) int {
+fn in_hover_root(ctx &Mu_Context) bool {
 	i := ctx.container_stack.idx
 	for i-- {
 		if ctx.container_stack.items[i] == ctx.hover_root {
-			return 1
+			return true
 		}
 		// only root containers have their `head` field set; stop searching if we've
 		//    * reached the current root container
@@ -980,7 +980,7 @@ fn in_hover_root(ctx &Mu_Context) int {
 			break
 		}
 	}
-	return 0
+	return false
 }
 
 fn mu_draw_control_frame(ctx &Mu_Context, id Mu_Id, rect Mu_Rect, colorid int, opt int) {
@@ -1012,7 +1012,7 @@ fn mu_draw_control_text(ctx &Mu_Context, str &i8, rect Mu_Rect, colorid int, opt
 	mu_pop_clip_rect(ctx)
 }
 
-fn mu_mouse_over(ctx &Mu_Context, rect Mu_Rect) int {
+fn mu_mouse_over(ctx &Mu_Context, rect Mu_Rect) bool {
 	return rect_overlaps_vec2(rect, ctx.mouse_pos)
 		&& rect_overlaps_vec2(mu_get_clip_rect(ctx), ctx.mouse_pos) && in_hover_root(ctx)
 }
