@@ -1,6 +1,8 @@
 @[translated]
 module microui
 
+import strconv
+
 //
 //* Copyright (c) 2024 rxi
 //*
@@ -1196,7 +1198,9 @@ fn number_textbox(ctx &Mu_Context, value &Mu_Real, r Mu_Rect, id Mu_Id) int {
 		res := mu_textbox_raw(ctx, ctx.number_edit_buf, sizeof(ctx.number_edit_buf), id,
 			r, 0)
 		if res & mu_res_submit || ctx.focus != id {
-			*value = strtod(ctx.number_edit_buf, (unsafe { nil }))
+			buf := ctx.number_edit_buf.map(u8(it))[..]
+			s := buf.bytestr()
+			*value = strconv.atof64(s) or { unsafe {nil} }
 			ctx.number_edit = 0
 		} else {
 			return 1
