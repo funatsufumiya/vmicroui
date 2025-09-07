@@ -1190,7 +1190,7 @@ fn mu_textbox_raw(ctx &Mu_Context, buf &i8, bufsz int, id Mu_Id, r Mu_Rect, opt 
 fn number_textbox(ctx &Mu_Context, value &Mu_Real, r Mu_Rect, id Mu_Id) int {
 	if ctx.mouse_pressed == mu_mouse_left && ctx.key_down & mu_key_shift && ctx.hover == id {
 		ctx.number_edit = id
-		sprintf(ctx.number_edit_buf, c'%.3g', *value)
+		C.sprintf(ctx.number_edit_buf, c'%.3g', *value)
 	}
 	if ctx.number_edit == id {
 		res := mu_textbox_raw(ctx, ctx.number_edit_buf, sizeof(ctx.number_edit_buf), id,
@@ -1252,7 +1252,7 @@ fn mu_slider_ex(ctx &Mu_Context, value &Mu_Real, low Mu_Real, high Mu_Real, step
 	thumb = mu_rect(base.x + x, base.y, w, base.h)
 	mu_draw_control_frame(ctx, id, thumb, mu_color_button, opt)
 	// draw text
-	sprintf(buf, fmt, v)
+	C.sprintf(buf, fmt, v)
 	mu_draw_control_text(ctx, buf, base, mu_color_text, opt)
 	return res
 }
@@ -1280,7 +1280,7 @@ fn mu_number_ex(ctx &Mu_Context, value &Mu_Real, step Mu_Real, fmt &i8, opt int)
 	// draw base
 	mu_draw_control_frame(ctx, id, base, mu_color_base, opt)
 	// draw text
-	sprintf(buf, fmt, *value)
+	C.sprintf(buf, fmt, *value)
 	mu_draw_control_text(ctx, buf, base, mu_color_text, opt)
 	return res
 }
