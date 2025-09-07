@@ -469,17 +469,8 @@ fn mu_init(ctx &Mu_Context) {
 }
 
 fn mu_begin(ctx &Mu_Context) {
-	for {
-		if !(ctx.text_width && ctx.text_height) {
-			C.fprintf((__acrt_iob_func(2)), c"Fatal error: %s:%d: assertion '%s' failed\n",
-				c'.\\microui.c', 139, c'ctx->text_width && ctx->text_height')
-			abort()
-		}
-		// while()
-		if !(0) {
-			break
-		}
-	}
+	// assert (ctx.text_width && ctx.text_height);
+
 	ctx.command_list.idx = 0
 	ctx.root_list.idx = 0
 	ctx.scroll_target = (unsafe { nil })
@@ -499,50 +490,11 @@ fn mu_end(ctx &Mu_Context) {
 	n := 0
 
 	// check stacks
-	for {
-		if !(ctx.container_stack.idx == 0) {
-			C.fprintf((__acrt_iob_func(2)), c"Fatal error: %s:%d: assertion '%s' failed\n",
-				c'.\\microui.c', 159, c'ctx->container_stack.idx == 0')
-			abort()
-		}
-		// while()
-		if !(0) {
-			break
-		}
-	}
-	for {
-		if !(ctx.clip_stack.idx == 0) {
-			C.fprintf((__acrt_iob_func(2)), c"Fatal error: %s:%d: assertion '%s' failed\n",
-				c'.\\microui.c', 160, c'ctx->clip_stack.idx == 0')
-			abort()
-		}
-		// while()
-		if !(0) {
-			break
-		}
-	}
-	for {
-		if !(ctx.id_stack.idx == 0) {
-			C.fprintf((__acrt_iob_func(2)), c"Fatal error: %s:%d: assertion '%s' failed\n",
-				c'.\\microui.c', 161, c'ctx->id_stack.idx == 0')
-			abort()
-		}
-		// while()
-		if !(0) {
-			break
-		}
-	}
-	for {
-		if !(ctx.layout_stack.idx == 0) {
-			C.fprintf((__acrt_iob_func(2)), c"Fatal error: %s:%d: assertion '%s' failed\n",
-				c'.\\microui.c', 162, c'ctx->layout_stack.idx == 0')
-			abort()
-		}
-		// while()
-		if !(0) {
-			break
-		}
-	}
+	assert ctx.container_stack.idx == 0;
+	assert ctx.clip_stack.idx == 0;
+	assert ctx.id_stack.idx == 0;
+	assert ctx.layout_stack.idx == 0;
+
 	// handle scroll input
 	if ctx.scroll_target {
 		ctx.scroll_target.scroll.x += ctx.scroll_delta.x
@@ -574,7 +526,7 @@ fn mu_end(ctx &Mu_Context) {
 		//    * otherwise set the previous container's tail to jump to this one
 		if i == 0 {
 			cmd := &Mu_Command(ctx.command_list.items)
-			cmd.jump.dst = &i8(cnt.head) + sizeof(Mu_JumpCommand)
+			cmd.jump.dst = unsafe { &i8(cnt.head) + sizeof(Mu_JumpCommand) }
 		} else {
 			prev := ctx.root_list.items[i - 1]
 			prev.tail.jump.dst = &i8(cnt.head) + sizeof(Mu_JumpCommand)
@@ -608,104 +560,32 @@ fn mu_get_id(ctx &Mu_Context, data voidptr, size int) Mu_Id {
 }
 
 fn mu_push_id(ctx &Mu_Context, data voidptr, size int) {
-	for {
-		for {
-			if !((ctx.id_stack).idx < ctx.id_stack.items.len) {
-				C.fprintf((__acrt_iob_func(2)), c"Fatal error: %s:%d: assertion '%s' failed\n",
-					c'.\\microui.c', 240, c'(ctx->id_stack).idx < (int) (sizeof((ctx->id_stack).items) / sizeof(*(ctx->id_stack).items))')
-				abort()
-			}
-			// while()
-			if !(0) {
-				break
-			}
-		}
-		(ctx.id_stack).items[(ctx.id_stack).idx] = (mu_get_id(ctx, data, size))
-		(ctx.id_stack).idx++
-		// while()
-		if !(0) {
-			break
-		}
-	}
+	(ctx.id_stack).items[(ctx.id_stack).idx] = (mu_get_id(ctx, data, size))
+	(ctx.id_stack).idx++
+	assert ctx.id_stack.idx < ctx.id_stack.items.len;
 }
 
 fn mu_pop_id(ctx &Mu_Context) {
-	for {
-		for {
-			if !((ctx.id_stack).idx > 0) {
-				C.fprintf((__acrt_iob_func(2)), c"Fatal error: %s:%d: assertion '%s' failed\n",
-					c'.\\microui.c', 245, c'(ctx->id_stack).idx > 0')
-				abort()
-			}
-			// while()
-			if !(0) {
-				break
-			}
-		}
-		(ctx.id_stack).idx--
-		// while()
-		if !(0) {
-			break
-		}
-	}
+	(ctx.id_stack).idx--
+	assert ctx.id_stack.idx > 0;
 }
 
 fn mu_push_clip_rect(ctx &Mu_Context, rect Mu_Rect) {
 	last := mu_get_clip_rect(ctx)
-	for {
-		for {
-			if !((ctx.clip_stack).idx < ctx.clip_stack.len) {
-				C.fprintf((__acrt_iob_func(2)), c"Fatal error: %s:%d: assertion '%s' failed\n",
-					c'.\\microui.c', 251, c'(ctx->clip_stack).idx < (int) (sizeof((ctx->clip_stack).items) / sizeof(*(ctx->clip_stack).items))')
-				abort()
-			}
-			// while()
-			if !(0) {
-				break
-			}
-		}
-		(ctx.clip_stack).items[(ctx.clip_stack).idx] = (intersect_rects(rect, last))
-		(ctx.clip_stack).idx++
-		// while()
-		if !(0) {
-			break
-		}
-	}
+	(ctx.clip_stack).items[(ctx.clip_stack).idx] = (intersect_rects(rect, last))
+	(ctx.clip_stack).idx++
+	assert ((ctx.clip_stack).idx < ctx.clip_stack.items.len);
 }
 
 fn mu_pop_clip_rect(ctx &Mu_Context) {
 	for {
-		for {
-			if !((ctx.clip_stack).idx > 0) {
-				C.fprintf((__acrt_iob_func(2)), c"Fatal error: %s:%d: assertion '%s' failed\n",
-					c'.\\microui.c', 256, c'(ctx->clip_stack).idx > 0')
-				abort()
-			}
-			// while()
-			if !(0) {
-				break
-			}
-		}
+		assert ((ctx.clip_stack).idx > 0);
 		(ctx.clip_stack).idx--
-		// while()
-		if !(0) {
-			break
-		}
 	}
 }
 
 fn mu_get_clip_rect(ctx &Mu_Context) Mu_Rect {
-	for {
-		if !(ctx.clip_stack.idx > 0) {
-			C.fprintf((__acrt_iob_func(2)), c"Fatal error: %s:%d: assertion '%s' failed\n",
-				c'.\\microui.c', 261, c'ctx->clip_stack.idx > 0')
-			abort()
-		}
-		// while()
-		if !(0) {
-			break
-		}
-	}
+	assert (ctx.clip_stack.idx > 0);
 	return ctx.clip_stack.items[ctx.clip_stack.idx - 1]
 }
 
@@ -726,25 +606,11 @@ fn push_layout(ctx &Mu_Context, body Mu_Rect, scroll Mu_Vec2) {
 	C.memset(&layout, 0, sizeof(layout))
 	layout.body = mu_rect(body.x - scroll.x, body.y - scroll.y, body.w, body.h)
 	layout.max = mu_vec2(-16777216, -16777216)
-	for {
-		for {
-			if !((ctx.layout_stack).idx < ctx.layout_stack.items.len) {
-				C.fprintf((__acrt_iob_func(2)), c"Fatal error: %s:%d: assertion '%s' failed\n",
-					c'.\\microui.c', 282, c'(ctx->layout_stack).idx < (int) (sizeof((ctx->layout_stack).items) / sizeof(*(ctx->layout_stack).items))')
-				abort()
-			}
-			// while()
-			if !(0) {
-				break
-			}
-		}
-		(ctx.layout_stack).items[(ctx.layout_stack).idx] = layout
-		(ctx.layout_stack).idx++
-		// while()
-		if !(0) {
-			break
-		}
-	}
+
+	(ctx.layout_stack).items[(ctx.layout_stack).idx] = layout
+	(ctx.layout_stack).idx++
+	assert (ctx.layout_stack).idx < ctx.layout_stack.items.len;
+
 	mu_layout_row(ctx, 1, &width, 0)
 }
 
@@ -758,57 +624,17 @@ fn pop_container(ctx &Mu_Context) {
 	cnt.content_size.x = layout.max.x - layout.body.x
 	cnt.content_size.y = layout.max.y - layout.body.y
 	// pop container, layout and id
-	for {
-		for {
-			if !((ctx.container_stack).idx > 0) {
-				C.fprintf((__acrt_iob_func(2)), c"Fatal error: %s:%d: assertion '%s' failed\n",
-					c'.\\microui.c', 298, c'(ctx->container_stack).idx > 0')
-				abort()
-			}
-			// while()
-			if !(0) {
-				break
-			}
-		}
-		(ctx.container_stack).idx--
-		// while()
-		if !(0) {
-			break
-		}
-	}
-	for {
-		for {
-			if !((ctx.layout_stack).idx > 0) {
-				C.fprintf((__acrt_iob_func(2)), c"Fatal error: %s:%d: assertion '%s' failed\n",
-					c'.\\microui.c', 299, c'(ctx->layout_stack).idx > 0')
-				abort()
-			}
-			// while()
-			if !(0) {
-				break
-			}
-		}
-		(ctx.layout_stack).idx--
-		// while()
-		if !(0) {
-			break
-		}
-	}
+	(ctx.container_stack).idx--
+	assert ((ctx.container_stack).idx > 0);
+
+	(ctx.layout_stack).idx--
+	assert (ctx.layout_stack).idx > 0;
+
 	mu_pop_id(ctx)
 }
 
 fn mu_get_current_container(ctx &Mu_Context) &Mu_Container {
-	for {
-		if !(ctx.container_stack.idx > 0) {
-			C.fprintf((__acrt_iob_func(2)), c"Fatal error: %s:%d: assertion '%s' failed\n",
-				c'.\\microui.c', 305, c'ctx->container_stack.idx > 0')
-			abort()
-		}
-		// while()
-		if !(0) {
-			break
-		}
-	}
+	assert ctx.container_stack.idx > 0
 	return ctx.container_stack.items[ctx.container_stack.idx - 1]
 }
 
@@ -829,7 +655,7 @@ fn get_container(ctx &Mu_Context, id Mu_Id, opt int) &Mu_Container {
 	idx = mu_pool_init(ctx, ctx.container_pool, 48, id)
 	cnt = &ctx.containers[idx]
 	C.memset(cnt, 0, sizeof(*cnt))
-	cnt.C.open = 1
+	cnt.open = 1
 	mu_bring_to_front(ctx, cnt)
 	return cnt
 }
@@ -857,17 +683,7 @@ fn mu_pool_init(ctx &Mu_Context, items &Mu_PoolItem, len int, id Mu_Id) int {
 			n = i
 		}
 	}
-	for {
-		if !(n > -1) {
-			C.fprintf((__acrt_iob_func(2)), c"Fatal error: %s:%d: assertion '%s' failed\n",
-				c'.\\microui.c', 354, c'n > -1')
-			abort()
-		}
-		// while()
-		if !(0) {
-			break
-		}
-	}
+	assert n > -1;
 	items[n].id = id
 	mu_pool_update(ctx, items, n)
 	return n
@@ -923,17 +739,7 @@ fn mu_input_keyup(ctx &Mu_Context, key int) {
 fn mu_input_text(ctx &Mu_Context, text &i8) {
 	len := C.strlen(ctx.input_text)
 	size := C.strlen(text) + 1
-	for {
-		if !(len + size <= int(sizeof(ctx.input_text))) {
-			C.fprintf((__acrt_iob_func(2)), c"Fatal error: %s:%d: assertion '%s' failed\n",
-				c'.\\microui.c', 418, c'len + size <= (int) sizeof(ctx->input_text)')
-			abort()
-		}
-		// while()
-		if !(0) {
-			break
-		}
-	}
+	assert (len + size <= int(sizeof(ctx.input_text)));
 	C.memcpy(ctx.input_text + len, text, size)
 }
 
@@ -942,17 +748,7 @@ fn mu_input_text(ctx &Mu_Context, text &i8) {
 //*============================================================================
 fn mu_push_command(ctx &Mu_Context, type_ int, size int) &Mu_Command {
 	cmd := &Mu_Command((ctx.command_list.items + ctx.command_list.idx))
-	for {
-		if !(ctx.command_list.idx + size < (256 * 1024)) {
-			C.fprintf((__acrt_iob_func(2)), c"Fatal error: %s:%d: assertion '%s' failed\n",
-				c'.\\microui.c', 429, c'ctx->command_list.idx + size < MU_COMMANDLIST_SIZE')
-			abort()
-		}
-		// while()
-		if !(0) {
-			break
-		}
-	}
+	assert (ctx.command_list.idx + size < (256 * 1024));
 	cmd.base.type_ = type_
 	cmd.base.size = size
 	ctx.command_list.idx += size
@@ -1068,24 +864,10 @@ fn mu_layout_end_column(ctx &Mu_Context) {
 	b := &Mu_Layout(0)
 
 	b = get_layout(ctx)
-	for {
-		for {
-			if !((ctx.layout_stack).idx > 0) {
-				C.fprintf((__acrt_iob_func(2)), c"Fatal error: %s:%d: assertion '%s' failed\n",
-					c'.\\microui.c', 538, c'(ctx->layout_stack).idx > 0')
-				abort()
-			}
-			// while()
-			if !(0) {
-				break
-			}
-		}
-		(ctx.layout_stack).idx--
-		// while()
-		if !(0) {
-			break
-		}
-	}
+
+	(ctx.layout_stack).idx--
+	assert (ctx.layout_stack).idx > 0;
+
 	// inherit position/next_row/max from child layout if they are greater
 	a = get_layout(ctx)
 	a.position.x = (if (a.position.x) > (b.position.x + b.body.x - a.body.x) {
@@ -1105,18 +887,8 @@ fn mu_layout_end_column(ctx &Mu_Context) {
 fn mu_layout_row(ctx &Mu_Context, items int, widths &int, height int) {
 	layout := get_layout(ctx)
 	if widths {
-		for {
-			if !(items <= 16) {
-				C.fprintf((__acrt_iob_func(2)), c"Fatal error: %s:%d: assertion '%s' failed\n",
-					c'.\\microui.c', 551, c'items <= MU_MAX_WIDTHS')
-				abort()
-			}
-			// while()
-			if !(0) {
-				break
-			}
-		}
 		C.memcpy(layout.widths, widths, items * sizeof(widths[0]))
+		assert items <= 16
 	}
 	layout.items = items
 	layout.position = mu_vec2(layout.indent, layout.next_row)
@@ -1562,25 +1334,9 @@ fn mu_begin_treenode_ex(ctx &Mu_Context, label &i8, opt int) int {
 	res := header(ctx, label, 1, opt)
 	if res & mu_res_active {
 		get_layout(ctx).indent += ctx.style.indent
-		for {
-			for {
-				if !((ctx.id_stack).idx < ctx.id_stack.items.len) {
-					C.fprintf((__acrt_iob_func(2)), c"Fatal error: %s:%d: assertion '%s' failed\n",
-						c'.\\microui.c', 976, c'(ctx->id_stack).idx < (int) (sizeof((ctx->id_stack).items) / sizeof(*(ctx->id_stack).items))')
-					abort()
-				}
-				// while()
-				if !(0) {
-					break
-				}
-			}
-			(ctx.id_stack).items[(ctx.id_stack).idx] = (ctx.last_id)
-			(ctx.id_stack).idx++
-			// while()
-			if !(0) {
-				break
-			}
-		}
+		(ctx.id_stack).items[(ctx.id_stack).idx] = (ctx.last_id)
+		(ctx.id_stack).idx++
+		assert (ctx.id_stack).idx < ctx.id_stack.items.len;
 	}
 	return res
 }
@@ -1698,45 +1454,15 @@ fn push_container_body(ctx &Mu_Context, cnt &Mu_Container, body Mu_Rect, opt int
 }
 
 fn begin_root_container(ctx &Mu_Context, cnt &Mu_Container) {
-	for {
-		for {
-			if !((ctx.container_stack).idx < ctx.container_stack.items.len) {
-				C.fprintf((__acrt_iob_func(2)), c"Fatal error: %s:%d: assertion '%s' failed\n",
-					c'.\\microui.c', 1053, c'(ctx->container_stack).idx < (int) (sizeof((ctx->container_stack).items) / sizeof(*(ctx->container_stack).items))')
-				abort()
-			}
-			// while()
-			if !(0) {
-				break
-			}
-		}
-		(ctx.container_stack).items[(ctx.container_stack).idx] = cnt
-		(ctx.container_stack).idx++
-		// while()
-		if !(0) {
-			break
-		}
-	}
+	(ctx.container_stack).items[(ctx.container_stack).idx] = cnt
+	(ctx.container_stack).idx++
+	assert (ctx.container_stack).idx < ctx.container_stack.items.len;
+
 	// push container to roots list and push head command
-	for {
-		for {
-			if !((ctx.root_list).idx < ctx.root_list.items.len) {
-				C.fprintf((__acrt_iob_func(2)), c"Fatal error: %s:%d: assertion '%s' failed\n",
-					c'.\\microui.c', 1055, c'(ctx->root_list).idx < (int) (sizeof((ctx->root_list).items) / sizeof(*(ctx->root_list).items))')
-				abort()
-			}
-			// while()
-			if !(0) {
-				break
-			}
-		}
-		(ctx.root_list).items[(ctx.root_list).idx] = cnt
-		(ctx.root_list).idx++
-		// while()
-		if !(0) {
-			break
-		}
-	}
+	(ctx.root_list).items[(ctx.root_list).idx] = cnt
+	(ctx.root_list).idx++
+	assert (ctx.root_list).idx < ctx.root_list.items.len;
+
 	cnt.head = push_jump(ctx, (unsafe { nil }))
 	// set as hover root if the mouse is overlapping this container and it has a
 	//  * higher zindex than the current hover root
@@ -1748,23 +1474,10 @@ fn begin_root_container(ctx &Mu_Context, cnt &Mu_Container) {
 	//  * another root-containers's begin/end block; this prevents the inner
 	//  * root-container being clipped to the outer
 	for {
-		for {
-			if !((ctx.clip_stack).idx < ctx.clip_stack.items.len) {
-				C.fprintf((__acrt_iob_func(2)), c"Fatal error: %s:%d: assertion '%s' failed\n",
-					c'.\\microui.c', 1067, c'(ctx->clip_stack).idx < (int) (sizeof((ctx->clip_stack).items) / sizeof(*(ctx->clip_stack).items))')
-				abort()
-			}
-			// while()
-			if !(0) {
-				break
-			}
-		}
+		assert ctx.clip_stack.idx < ctx.clip_stack.items.len;
+
 		(ctx.clip_stack).items[(ctx.clip_stack).idx] = unclipped_rect
 		(ctx.clip_stack).idx++
-		// while()
-		if !(0) {
-			break
-		}
 	}
 }
 
@@ -1783,28 +1496,14 @@ fn mu_begin_window_ex(ctx &Mu_Context, title &i8, rect Mu_Rect, opt int) int {
 	body := Mu_Rect{}
 	id := mu_get_id(ctx, title, C.strlen(title))
 	cnt := get_container(ctx, id, opt)
-	if !cnt || !cnt.C.open {
+	if !cnt || !cnt.open {
 		return 0
 	}
-	for {
-		for {
-			if !((ctx.id_stack).idx < ctx.id_stack.items.len) {
-				C.fprintf((__acrt_iob_func(2)), c"Fatal error: %s:%d: assertion '%s' failed\n",
-					c'.\\microui.c', 1088, c'(ctx->id_stack).idx < (int) (sizeof((ctx->id_stack).items) / sizeof(*(ctx->id_stack).items))')
-				abort()
-			}
-			// while()
-			if !(0) {
-				break
-			}
-		}
-		(ctx.id_stack).items[(ctx.id_stack).idx] = id
-		(ctx.id_stack).idx++
-		// while()
-		if !(0) {
-			break
-		}
-	}
+
+	(ctx.id_stack).items[(ctx.id_stack).idx] = id
+	(ctx.id_stack).idx++
+	assert (ctx.id_stack).idx < ctx.id_stack.items.len;
+
 	if cnt.rect.w == 0 {
 		cnt.rect = rect
 	}
@@ -1840,7 +1539,7 @@ fn mu_begin_window_ex(ctx &Mu_Context, title &i8, rect Mu_Rect, opt int) int {
 			mu_draw_icon(ctx, mu_icon_close, r, ctx.style.colors[int(mu_color_titletext)])
 			mu_update_control(ctx, id3, r, opt)
 			if ctx.mouse_pressed == mu_mouse_left && id3 == ctx.focus {
-				cnt.C.open = 0
+				cnt.open = 0
 			}
 		}
 	}
@@ -1872,7 +1571,7 @@ fn mu_begin_window_ex(ctx &Mu_Context, title &i8, rect Mu_Rect, opt int) int {
 	}
 	// close if this is a popup window and elsewhere was clicked
 	if opt & mu_opt_popup && ctx.mouse_pressed && ctx.hover_root != cnt {
-		cnt.C.open = 0
+		cnt.open = 0
 	}
 	mu_push_clip_rect(ctx, cnt.body)
 	return mu_res_active
@@ -1890,7 +1589,7 @@ fn mu_open_popup(ctx &Mu_Context, name &i8) {
 	ctx.next_hover_root = ctx.hover_root
 	// position at mouse cursor, open and bring-to-front
 	cnt.rect = mu_rect(ctx.mouse_pos.x, ctx.mouse_pos.y, 1, 1)
-	cnt.C.open = 1
+	cnt.open = 1
 	mu_bring_to_front(ctx, cnt)
 }
 
@@ -1911,25 +1610,11 @@ fn mu_begin_panel_ex(ctx &Mu_Context, name &i8, opt int) {
 	if ~opt & mu_opt_noframe {
 		ctx.draw_frame(ctx, cnt.rect, mu_color_panelbg)
 	}
-	for {
-		for {
-			if !((ctx.container_stack).idx < ctx.container_stack.items.len) {
-				C.fprintf((__acrt_iob_func(2)), c"Fatal error: %s:%d: assertion '%s' failed\n",
-					c'.\\microui.c', 1199, c'(ctx->container_stack).idx < (int) (sizeof((ctx->container_stack).items) / sizeof(*(ctx->container_stack).items))')
-				abort()
-			}
-			// while()
-			if !(0) {
-				break
-			}
-		}
-		(ctx.container_stack).items[(ctx.container_stack).idx] = cnt
-		(ctx.container_stack).idx++
-		// while()
-		if !(0) {
-			break
-		}
-	}
+
+	(ctx.container_stack).items[(ctx.container_stack).idx] = cnt
+	(ctx.container_stack).idx++
+	assert (ctx.container_stack).idx < ctx.container_stack.items.len;
+
 	push_container_body(ctx, cnt, cnt.rect, opt)
 	mu_push_clip_rect(ctx, cnt.body)
 }
