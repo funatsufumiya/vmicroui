@@ -483,7 +483,7 @@ fn mu_begin(ctx &Mu_Context) {
 	ctx.frame++
 }
 
-fn compare_zindex(a voidptr, b voidptr) int {
+fn compare_zindex(a &&Mu_Container, b &&Mu_Container) int {
 	return (*&&Mu_Container(a)).zindex - (*&&Mu_Container(b)).zindex
 }
 
@@ -548,9 +548,12 @@ fn mu_set_focus(ctx &Mu_Context, id Mu_Id) {
 
 // 32bit fnv-1a hash
 fn hash(hash &Mu_Id, data voidptr, size int) {
-	p := data
-	for size-- {
-		*hash = (*hash ^ *p++) * 16777619
+	// p := data
+	mut p := &u8(data)
+	// for size-- {
+	for i := 0; i < size; i++ {
+		// *hash = (*hash ^ *p++) * 16777619
+		 *hash = (*hash ^ p[i]) * 16777619
 	}
 }
 
@@ -1591,7 +1594,7 @@ fn mu_end_window(ctx &Mu_Context) {
 }
 
 fn mu_open_popup(ctx &Mu_Context, name &i8) {
-	cnt := mu_get_container(ctx, name)
+	cnt := mu_get_container(ctx, name) or { panic(err) }
 	// set as hover root so popup isn't closed in begin_window_ex()
 	ctx.hover_root = cnt
 	ctx.next_hover_root = ctx.hover_root
