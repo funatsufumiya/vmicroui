@@ -82,19 +82,22 @@ type Mu_Id = u32
 type Mu_Real = f32
 type Mu_Font = voidptr
 
-struct Mu_Vec2 {
+pub struct Mu_Vec2 {
+pub mut:
 	x int
 	y int
 }
 
-struct Mu_Rect {
+pub struct Mu_Rect {
+pub mut:
 	x int
 	y int
 	w int
 	h int
 }
 
-struct Mu_Color {
+pub struct Mu_Color {
+pub mut:
 	r u8
 	g u8
 	b u8
