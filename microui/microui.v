@@ -421,7 +421,7 @@ pub fn mu_end(ctx &Mu_Context) {
 	}
 	// reset input state
 	ctx.key_pressed = 0
-	ctx.input_text[0] = `\0`
+	ctx.input_text[0] = `\0`.bytes()[0]
 	ctx.mouse_pressed = 0
 	ctx.scroll_delta = mu_vec2(0, 0)
 	ctx.last_mouse_pos = ctx.mouse_pos
@@ -730,7 +730,7 @@ pub fn mu_draw_text(ctx &Mu_Context, font Mu_Font, str &i8, len int, pos Mu_Vec2
 	s := int(sizeof(Mu_TextCommand))
 	cmd = mu_push_command(ctx, mu_command_text, s + len)
 	C.memcpy(cmd.text.str, str, len)
-	cmd.text.str[len] = `\0`
+	cmd.text.str[len] = `\0`.bytes()[0]
 	cmd.text.pos = pos
 	cmd.text.color = color
 	cmd.text.font = font
@@ -982,7 +982,7 @@ pub fn mu_text(ctx &Mu_Context, text &i8) {
 		end = start
 		for {
 			word := p
-			for *p && *p != ' ' && *p != '\n' {
+			for *p && *p != ` `.bytes()[0] && *p != `\n`.bytes()[0] {
 				p++
 			}
 			w += ctx.text_width(font, word, p - word)
@@ -992,7 +992,7 @@ pub fn mu_text(ctx &Mu_Context, text &i8) {
 			w += ctx.text_width(font, p, 1)
 			end = p++
 			// while()
-			if !(*end && *end != '\n') {
+			if !(*end && *end != `\n`.bytes()[0]) {
 				break
 			}
 		}
@@ -1070,7 +1070,7 @@ pub fn mu_textbox_raw(ctx &Mu_Context, buf &i8, bufsz int, id Mu_Id, r Mu_Rect, 
 		if n > 0 {
 			C.memcpy(buf + len, ctx.input_text, n)
 			len += n
-			buf[len] = `\0`
+			buf[len] = `\0`.bytes()[0]
 			res |= mu_res_change
 		}
 		// handle backspace
@@ -1079,7 +1079,7 @@ pub fn mu_textbox_raw(ctx &Mu_Context, buf &i8, bufsz int, id Mu_Id, r Mu_Rect, 
 			for (buf[len--$] & 192) == 128 && len > 0 {
 				0
 			}
-			buf[len] = `\0`
+			buf[len] = `\0`.bytes()[0]
 			res |= mu_res_change
 		}
 		// handle return
