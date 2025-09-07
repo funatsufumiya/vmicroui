@@ -1062,7 +1062,7 @@ fn mu_text(ctx &Mu_Context, text &i8) {
 		end = start
 		for {
 			word := p
-			for *p && *p != ` ` && *p != `\n` {
+			for *p && *p != ' ' && *p != '\n' {
 				p++
 			}
 			w += ctx.text_width(font, word, p - word)
@@ -1072,7 +1072,7 @@ fn mu_text(ctx &Mu_Context, text &i8) {
 			w += ctx.text_width(font, p, 1)
 			end = p++
 			// while()
-			if !(*end && *end != `\n`) {
+			if !(*end && *end != '\n') {
 				break
 			}
 		}
