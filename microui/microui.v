@@ -1007,8 +1007,8 @@ pub fn mu_text(ctx &Mu_Context, text &i8) {
 }
 
 pub fn mu_label(ctx &Mu_Context, text string) {
-	text_i8 := text.bytes().map(i8(it))
-	mu_draw_control_text(ctx, text_i8, mu_layout_next(ctx), mu_color_text, 0)
+	ctext := c'${text}'
+	mu_draw_control_text(ctx, &ctext, mu_layout_next(ctx), mu_color_text, 0)
 }
 
 pub fn mu_button_ex(ctx &Mu_Context, label &i8, icon int, opt int) int {
