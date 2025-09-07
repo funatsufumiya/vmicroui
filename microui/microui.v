@@ -524,7 +524,7 @@ pub fn push_layout(ctx &Mu_Context, body Mu_Rect, scroll Mu_Vec2) {
 	(ctx.layout_stack).idx++
 	assert (ctx.layout_stack).idx < ctx.layout_stack.items.len;
 
-	mu_layout_row(ctx, 1, &width, 0)
+	mu_layout_row_impl(ctx, 1, &width, 0)
 }
 
 pub fn get_layout(ctx &Mu_Context) &Mu_Layout {
@@ -846,7 +846,7 @@ pub fn mu_layout_next(ctx &Mu_Context) Mu_Rect {
 	} else {
 		// handle next row
 		if layout.item_index == layout.items {
-			mu_layout_row(ctx, layout.items, (unsafe { nil }), layout.size.y)
+			mu_layout_row_impl(ctx, layout.items, (unsafe { nil }), layout.size.y)
 		}
 		// position
 		res.x = layout.position.x
@@ -974,7 +974,7 @@ pub fn mu_text(ctx &Mu_Context, text &i8) {
 	font := ctx.style.font
 	color := ctx.style.colors[int(mu_color_text)]
 	mu_layout_begin_column(ctx)
-	mu_layout_row(ctx, 1, &width, ctx.text_height(font))
+	mu_layout_row_impl(ctx, 1, &width, ctx.text_height(font))
 	for {
 		r := mu_layout_next(ctx)
 		w := 0
@@ -1216,7 +1216,7 @@ pub fn header(ctx &Mu_Context, label &i8, istreenode int, opt int) int {
 	id := mu_get_id(ctx, label, C.strlen(label))
 	idx := mu_pool_get(ctx, ctx.treenode_pool, 48, id)
 	width := -1
-	mu_layout_row(ctx, 1, &width, 0)
+	mu_layout_row_impl(ctx, 1, &width, 0)
 	active = (idx >= 0)
 	expanded = if (opt & mu_opt_expanded) { !active } else { active }
 	r = mu_layout_next(ctx)
