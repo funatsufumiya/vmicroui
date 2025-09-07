@@ -528,7 +528,7 @@ fn mu_end(ctx &Mu_Context) {
 		// if this is the first container then make the first command jump to it.
 		//    * otherwise set the previous container's tail to jump to this one
 		if i == 0 {
-			cmd := &Mu_Command(ctx.command_list.items)
+			cmd := &Mu_Command(&int(ctx.command_list.items))
 			cmd.jump.dst = unsafe { &i8(cnt.head) + sizeof(Mu_JumpCommand) }
 		} else {
 			prev := ctx.root_list.items[i - 1]
@@ -750,7 +750,7 @@ fn mu_input_text(ctx &Mu_Context, text &i8) {
 //* commandlist
 //*============================================================================
 fn mu_push_command(ctx &Mu_Context, type_ int, size int) &Mu_Command {
-	cmd := &Mu_Command((ctx.command_list.items + ctx.command_list.idx))
+	cmd := unsafe { &Mu_Command(&int(ctx.command_list.items) + ctx.command_list.idx) }
 	assert (ctx.command_list.idx + size < (256 * 1024));
 	cmd.base.type_ = type_
 	cmd.base.size = size
@@ -760,9 +760,9 @@ fn mu_push_command(ctx &Mu_Context, type_ int, size int) &Mu_Command {
 
 fn mu_next_command(ctx &Mu_Context, cmd &&Mu_Command) int {
 	if *cmd {
-		*cmd = unsafe { &Mu_Command(((&i8(*cmd)) + (*cmd).base.size)) }
+		*cmd = unsafe { &Mu_Command(((&int(*cmd)) + (*cmd).base.size)) }
 	} else {
-		*cmd = &Mu_Command(ctx.command_list.items)
+		*cmd = unsafe { &Mu_Command(&int(ctx.command_list.items)) }
 	}
 	for unsafe {&i8(*cmd)} != ctx.command_list.items + ctx.command_list.idx {
 		if (*cmd).type_ != mu_command_jump {
