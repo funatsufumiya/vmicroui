@@ -1416,13 +1416,13 @@ pub fn end_root_container(ctx &Mu_Context) {
 }
 
 pub fn mu_begin_window_ex(ctx &Mu_Context, title string, rect Mu_Rect, opt int) bool {
-	title_i8 := title.bytes().map(i8(it))
-	return mu_begin_window_ex_impl(ctx, title_i8, rect, opt)
+	ctitle := c'${title}'
+	return mu_begin_window_ex_impl(ctx, &ctitle, rect, opt)
 }
 
-fn mu_begin_window_ex_impl(ctx &Mu_Context, title_i8 []i8, rect Mu_Rect, opt int) bool {
+fn mu_begin_window_ex_impl(ctx &Mu_Context, title &u8, rect Mu_Rect, opt int) bool {
 	body := Mu_Rect{}
-	id := mu_get_id(ctx, &title_i8, C.strlen(title_i8))
+	id := mu_get_id(ctx, title, C.strlen(title))
 	cnt := get_container(ctx, id, opt) or { return false }
 	if !cnt.open {
 		return false
@@ -1451,7 +1451,7 @@ fn mu_begin_window_ex_impl(ctx &Mu_Context, title_i8 []i8, rect Mu_Rect, opt int
 		if ~opt & mu_opt_notitle {
 			id2 := mu_get_id(ctx, c'!title', 6)
 			mu_update_control(ctx, id2, tr, opt)
-			mu_draw_control_text(ctx, title_i8, tr, mu_color_titletext, opt)
+			mu_draw_control_text(ctx, title, tr, mu_color_titletext, opt)
 			if id2 == ctx.focus && ctx.mouse_down == mu_mouse_left {
 				cnt.rect.x += ctx.mouse_delta.x
 				cnt.rect.y += ctx.mouse_delta.y
