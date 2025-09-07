@@ -37,7 +37,7 @@ fn frame(app &App) {
 fn process_frame(app &App) {
 	mut ctx := app.mu
 	microui.mu_begin(ctx)
-	if microui.mu_begin_window_ex(ctx, 'Hello', microui.Mu_Rect{50, 50, 300, 100}, 0) {
+	if microui.mu_begin_window(ctx, 'Hello', microui.Mu_Rect{50, 50, 300, 100}) {
 		microui.mu_layout_row(ctx, 1, [280], 0)
 		microui.mu_label(ctx, 'Hello, microui!')
 		microui.mu_end_window(ctx)

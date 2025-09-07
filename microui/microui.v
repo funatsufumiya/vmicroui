@@ -1551,3 +1551,45 @@ pub fn mu_end_panel(ctx &Mu_Context) {
 	mu_pop_clip_rect(ctx)
 	pop_container(ctx)
 }
+
+// #define mu_button(ctx, label)             mu_button_ex(ctx, label, 0, MU_OPT_ALIGNCENTER)
+// #define mu_textbox(ctx, buf, bufsz)       mu_textbox_ex(ctx, buf, bufsz, 0)
+// #define mu_slider(ctx, value, lo, hi)     mu_slider_ex(ctx, value, lo, hi, 0, MU_SLIDER_FMT, MU_OPT_ALIGNCENTER)
+// #define mu_number(ctx, value, step)       mu_number_ex(ctx, value, step, MU_SLIDER_FMT, MU_OPT_ALIGNCENTER)
+// #define mu_header(ctx, label)             mu_header_ex(ctx, label, 0)
+// #define mu_begin_treenode(ctx, label)     mu_begin_treenode_ex(ctx, label, 0)
+// #define mu_begin_window(ctx, title, rect) mu_begin_window_ex(ctx, title, rect, 0)
+// #define mu_begin_panel(ctx, name)         mu_begin_panel_ex(ctx, name, 0)
+
+// V equivalents for the above macros
+pub fn mu_button(ctx &Mu_Context, label &i8) int {
+	return mu_button_ex(ctx, label, 0, mu_opt_aligncenter)
+}
+
+pub fn mu_textbox(ctx &Mu_Context, buf &i8, bufsz int) int {
+	return mu_textbox_ex(ctx, buf, bufsz, 0)
+}
+
+pub fn mu_slider(ctx &Mu_Context, value &Mu_Real, lo Mu_Real, hi Mu_Real) int {
+	return mu_slider_ex(ctx, value, lo, hi, 0, c'%.3g', mu_opt_aligncenter)
+}
+
+pub fn mu_number(ctx &Mu_Context, value &Mu_Real, step Mu_Real) int {
+	return mu_number_ex(ctx, value, step, c'%.3g', mu_opt_aligncenter)
+}
+
+pub fn mu_header(ctx &Mu_Context, label &i8) int {
+	return mu_header_ex(ctx, label, 0)
+}
+
+pub fn mu_begin_treenode(ctx &Mu_Context, label &i8) int {
+	return mu_begin_treenode_ex(ctx, label, 0)
+}
+
+pub fn mu_begin_window(ctx &Mu_Context, title string, rect Mu_Rect) bool {
+	return mu_begin_window_ex(ctx, title, rect, 0)
+}
+
+pub fn mu_begin_panel(ctx &Mu_Context, name &i8) {
+	mu_begin_panel_ex(ctx, name, 0)
+}
