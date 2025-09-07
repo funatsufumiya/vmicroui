@@ -11,72 +11,72 @@ import strconv
 //
 
 // empty enum
-const mu_clip_part = 1
-const mu_clip_all = 1
+pub const mu_clip_part = 1
+pub const mu_clip_all = 1
 
 // empty enum
-const mu_command_jump = 1
-const mu_command_clip = 1
-const mu_command_rect = 2
-const mu_command_text = 3
-const mu_command_icon = 4
-const mu_command_max = 5
+pub const mu_command_jump = 1
+pub const mu_command_clip = 1
+pub const mu_command_rect = 2
+pub const mu_command_text = 3
+pub const mu_command_icon = 4
+pub const mu_command_max = 5
 
 // empty enum
-const mu_color_text = 0
-const mu_color_border = 1
-const mu_color_windowbg = 2
-const mu_color_titlebg = 3
-const mu_color_titletext = 4
-const mu_color_panelbg = 5
-const mu_color_button = 6
-const mu_color_buttonhover = 7
-const mu_color_buttonfocus = 8
-const mu_color_base = 9
-const mu_color_basehover = 10
-const mu_color_basefocus = 11
-const mu_color_scrollbase = 12
-const mu_color_scrollthumb = 13
-const mu_color_max = 14
+pub const mu_color_text = 0
+pub const mu_color_border = 1
+pub const mu_color_windowbg = 2
+pub const mu_color_titlebg = 3
+pub const mu_color_titletext = 4
+pub const mu_color_panelbg = 5
+pub const mu_color_button = 6
+pub const mu_color_buttonhover = 7
+pub const mu_color_buttonfocus = 8
+pub const mu_color_base = 9
+pub const mu_color_basehover = 10
+pub const mu_color_basefocus = 11
+pub const mu_color_scrollbase = 12
+pub const mu_color_scrollthumb = 13
+pub const mu_color_max = 14
 
 // empty enum
-const mu_icon_close = 1
-const mu_icon_check = 1
-const mu_icon_collapsed = 2
-const mu_icon_expanded = 3
-const mu_icon_max = 4
+pub const mu_icon_close = 1
+pub const mu_icon_check = 1
+pub const mu_icon_collapsed = 2
+pub const mu_icon_expanded = 3
+pub const mu_icon_max = 4
 
 // empty enum
-const mu_res_active = 1 << 0
-const mu_res_submit = 1 << 1
-const mu_res_change = 1 << 2
+pub const mu_res_active = 1 << 0
+pub const mu_res_submit = 1 << 1
+pub const mu_res_change = 1 << 2
 
 // empty enum
-const mu_opt_aligncenter = 1 << 0
-const mu_opt_alignright = 1 << 1
-const mu_opt_nointeract = 1 << 2
-const mu_opt_noframe = 1 << 3
-const mu_opt_noresize = 1 << 4
-const mu_opt_noscroll = 1 << 5
-const mu_opt_noclose = 1 << 6
-const mu_opt_notitle = 1 << 7
-const mu_opt_holdfocus = 1 << 8
-const mu_opt_autosize = 1 << 9
-const mu_opt_popup = 1 << 10
-const mu_opt_closed = 1 << 11
-const mu_opt_expanded = 1 << 12
+pub const mu_opt_aligncenter = 1 << 0
+pub const mu_opt_alignright = 1 << 1
+pub const mu_opt_nointeract = 1 << 2
+pub const mu_opt_noframe = 1 << 3
+pub const mu_opt_noresize = 1 << 4
+pub const mu_opt_noscroll = 1 << 5
+pub const mu_opt_noclose = 1 << 6
+pub const mu_opt_notitle = 1 << 7
+pub const mu_opt_holdfocus = 1 << 8
+pub const mu_opt_autosize = 1 << 9
+pub const mu_opt_popup = 1 << 10
+pub const mu_opt_closed = 1 << 11
+pub const mu_opt_expanded = 1 << 12
 
 // empty enum
-const mu_mouse_left = 1 << 0
-const mu_mouse_right = 1 << 1
-const mu_mouse_middle = 1 << 2
+pub const mu_mouse_left = 1 << 0
+pub const mu_mouse_right = 1 << 1
+pub const mu_mouse_middle = 1 << 2
 
 // empty enum
-const mu_key_shift = 1 << 0
-const mu_key_ctrl = 1 << 1
-const mu_key_alt = 1 << 2
-const mu_key_backspace = 1 << 3
-const mu_key_return = 1 << 4
+pub const mu_key_shift = 1 << 0
+pub const mu_key_ctrl = 1 << 1
+pub const mu_key_alt = 1 << 2
+pub const mu_key_backspace = 1 << 3
+pub const mu_key_return = 1 << 4
 
 type Mu_Id = u32
 type Mu_Real = f32
@@ -104,33 +104,39 @@ pub mut:
 	a u8
 }
 
-struct Mu_PoolItem {
+pub struct Mu_PoolItem {
+pub mut:
 	id          Mu_Id
 	last_update int
 }
 
-struct Mu_BaseCommand {
+pub struct Mu_BaseCommand {
+pub mut:
 	type_ int
 	size  int
 }
 
-struct Mu_JumpCommand {
+pub struct Mu_JumpCommand {
+pub mut:
 	base Mu_BaseCommand
 	dst  voidptr
 }
 
-struct Mu_ClipCommand {
+pub struct Mu_ClipCommand {
+pub mut:
 	base Mu_BaseCommand
 	rect Mu_Rect
 }
 
-struct Mu_RectCommand {
+pub struct Mu_RectCommand {
+pub mut:
 	base  Mu_BaseCommand
 	rect  Mu_Rect
 	color Mu_Color
 }
 
-struct Mu_TextCommand {
+pub struct Mu_TextCommand {
+pub mut:
 	base  Mu_BaseCommand
 	font  Mu_Font
 	pos   Mu_Vec2
@@ -138,14 +144,16 @@ struct Mu_TextCommand {
 	str   [1]i8
 }
 
-struct Mu_IconCommand {
+pub struct Mu_IconCommand {
+pub mut:
 	base  Mu_BaseCommand
 	rect  Mu_Rect
 	id    int
 	color Mu_Color
 }
 
-union Mu_Command {
+pub union Mu_Command {
+pub mut:
 	type_ int
 	base  Mu_BaseCommand
 	jump  Mu_JumpCommand
@@ -155,7 +163,22 @@ union Mu_Command {
 	icon  Mu_IconCommand
 }
 
-struct Mu_Layout {
+pub fn mu_command_type (cmd &Mu_Command) int {
+	return unsafe{ cmd.type_ }
+}
+
+pub fn mu_str (str_i8 []i8) string {
+	s := str_i8.map(u8(it))
+	return s.str()
+}
+
+pub fn mu_cmd_str (str_i8 [1]i8) string {
+	s := str_i8.map(u8(it))
+	return s.str()
+}
+
+pub struct Mu_Layout {
+pub mut:
 	body       Mu_Rect
 	next       Mu_Rect
 	position   Mu_Vec2
@@ -169,7 +192,8 @@ struct Mu_Layout {
 	indent     bool
 }
 
-struct Mu_Container {
+pub struct Mu_Container {
+pub mut:
 	head         &Mu_Command
 	tail         &Mu_Command
 	rect         Mu_Rect
@@ -180,7 +204,8 @@ struct Mu_Container {
 	open         int
 }
 
-struct Mu_Style {
+pub struct Mu_Style {
+pub mut:
 	font           Mu_Font
 	size           Mu_Vec2
 	padding        int
@@ -643,7 +668,7 @@ pub fn mu_push_command(ctx &Mu_Context, type_ int, size int) &Mu_Command {
 	return cmd
 }
 
-pub fn mu_next_command(ctx &Mu_Context, cmd &&Mu_Command) int {
+pub fn mu_next_command(ctx &Mu_Context, cmd &&Mu_Command) bool {
 	if *cmd {
 		*cmd = unsafe { &Mu_Command(((&int(*cmd)) + (*cmd).base.size)) }
 	} else {
@@ -651,11 +676,11 @@ pub fn mu_next_command(ctx &Mu_Context, cmd &&Mu_Command) int {
 	}
 	for unsafe {&i8(*cmd)} != ctx.command_list.items + ctx.command_list.idx {
 		if (*cmd).type_ != mu_command_jump {
-			return 1
+			return true
 		}
 		*cmd = (*cmd).jump.dst
 	}
-	return 0
+	return false
 }
 
 pub fn push_jump(ctx &Mu_Context, dst &Mu_Command) &Mu_Command {
@@ -741,8 +766,8 @@ pub fn mu_draw_icon(ctx &Mu_Context, id int, rect Mu_Rect, color Mu_Color) {
 //*============================================================================
 
 // empty enum
-const relative = 1
-const absolute = 2
+pub const relative = 1
+pub const absolute = 2
 
 pub fn mu_layout_begin_column(ctx &Mu_Context) {
 	push_layout(ctx, mu_layout_next(ctx), mu_vec2(0, 0))
@@ -773,7 +798,11 @@ pub fn mu_layout_end_column(ctx &Mu_Context) {
 	a.max.y = (if (a.max.y) > (b.max.y) { (a.max.y) } else { (b.max.y) })
 }
 
-pub fn mu_layout_row(ctx &Mu_Context, items int, widths &int, height int) {
+pub fn mu_layout_row(ctx &Mu_Context, items int, widths []int, height int) {
+	mu_layout_row_impl(ctx, items, widths, height)
+}
+
+fn mu_layout_row_impl(ctx &Mu_Context, items int, widths &int, height int) {
 	layout := get_layout(ctx)
 	s := int(sizeof(widths[0]))
 	// s := 4
