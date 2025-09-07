@@ -816,7 +816,8 @@ fn mu_draw_text(ctx &Mu_Context, font Mu_Font, str &i8, len int, pos Mu_Vec2, co
 	if len < 0 {
 		len = C.strlen(str)
 	}
-	cmd = mu_push_command(ctx, mu_command_text, sizeof(Mu_TextCommand) + len)
+	s := int(sizeof(Mu_TextCommand))
+	cmd = mu_push_command(ctx, mu_command_text, s + len)
 	C.memcpy(cmd.text.str, str, len)
 	cmd.text.str[len] = `\0`
 	cmd.text.pos = pos
@@ -888,8 +889,10 @@ fn mu_layout_end_column(ctx &Mu_Context) {
 
 fn mu_layout_row(ctx &Mu_Context, items int, widths &int, height int) {
 	layout := get_layout(ctx)
+	s := int(sizeof(widths[0]))
+	// s := 4
 	if widths {
-		C.memcpy(layout.widths, widths, items * sizeof(widths[0]))
+		C.memcpy(layout.widths, widths, items * s)
 		assert items <= 16
 	}
 	layout.items = items
