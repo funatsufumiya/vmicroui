@@ -24,7 +24,9 @@ fn main() {
 		frame_fn:      frame
 		user_data:     app
 	)
-	app.mu = microui.new_context()
+	ctx := microui.new_context()
+	microui.mu_init(ctx)
+	app.mu = ctx
 	app.gg.run()
 }
 
