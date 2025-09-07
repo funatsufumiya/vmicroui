@@ -163,7 +163,7 @@ struct Mu_Layout {
 	item_index int
 	next_row   int
 	next_type  int
-	indent     int
+	indent     bool
 }
 
 struct Mu_Container {
@@ -640,7 +640,7 @@ fn mu_get_current_container(ctx &Mu_Context) &Mu_Container {
 	return ctx.container_stack.items[ctx.container_stack.idx - 1]
 }
 
-fn get_container(ctx &Mu_Context, id Mu_Id, opt int) &Mu_Container {
+fn get_container(ctx &Mu_Context, id Mu_Id, opt int) ?&Mu_Container {
 	cnt := &Mu_Container(0)
 	// try to get existing container from pool
 	idx := mu_pool_get(ctx, ctx.container_pool, 48, id)
@@ -651,18 +651,18 @@ fn get_container(ctx &Mu_Context, id Mu_Id, opt int) &Mu_Container {
 		return &ctx.containers[idx]
 	}
 	if opt & mu_opt_closed {
-		return unsafe { nil }
+		return none
 	}
 	// container not found in pool: init new container
 	idx = mu_pool_init(ctx, ctx.container_pool, 48, id)
 	cnt = &ctx.containers[idx]
 	C.memset(cnt, 0, sizeof(*cnt))
-	cnt.open = 1
+	cnt.open = true
 	mu_bring_to_front(ctx, cnt)
 	return cnt
 }
 
-fn mu_get_container(ctx &Mu_Context, name &i8) &Mu_Container {
+fn mu_get_container(ctx &Mu_Context, name &i8) ?&Mu_Container {
 	id := mu_get_id(ctx, name, C.strlen(name))
 	return get_container(ctx, id, 0)
 }
@@ -1502,8 +1502,8 @@ fn end_root_container(ctx &Mu_Context) {
 fn mu_begin_window_ex(ctx &Mu_Context, title &i8, rect Mu_Rect, opt int) int {
 	body := Mu_Rect{}
 	id := mu_get_id(ctx, title, C.strlen(title))
-	cnt := get_container(ctx, id, opt)
-	if !cnt || !cnt.open {
+	cnt := get_container(ctx, id, opt) or { return 0 }
+	if !cnt.open {
 		return 0
 	}
 
@@ -1546,7 +1546,7 @@ fn mu_begin_window_ex(ctx &Mu_Context, title &i8, rect Mu_Rect, opt int) int {
 			mu_draw_icon(ctx, mu_icon_close, r, ctx.style.colors[int(mu_color_titletext)])
 			mu_update_control(ctx, id3, r, opt)
 			if ctx.mouse_pressed == mu_mouse_left && id3 == ctx.focus {
-				cnt.open = 0
+				cnt.open = false
 			}
 		}
 	}
@@ -1578,7 +1578,7 @@ fn mu_begin_window_ex(ctx &Mu_Context, title &i8, rect Mu_Rect, opt int) int {
 	}
 	// close if this is a popup window and elsewhere was clicked
 	if opt & mu_opt_popup && ctx.mouse_pressed && ctx.hover_root != cnt {
-		cnt.open = 0
+		cnt.open = false
 	}
 	mu_push_clip_rect(ctx, cnt.body)
 	return mu_res_active
@@ -1596,7 +1596,7 @@ fn mu_open_popup(ctx &Mu_Context, name &i8) {
 	ctx.next_hover_root = ctx.hover_root
 	// position at mouse cursor, open and bring-to-front
 	cnt.rect = mu_rect(ctx.mouse_pos.x, ctx.mouse_pos.y, 1, 1)
-	cnt.open = 1
+	cnt.open = true
 	mu_bring_to_front(ctx, cnt)
 }
 
@@ -1612,7 +1612,7 @@ fn mu_end_popup(ctx &Mu_Context) {
 fn mu_begin_panel_ex(ctx &Mu_Context, name &i8, opt int) {
 	cnt := &Mu_Container(0)
 	mu_push_id(ctx, name, C.strlen(name))
-	cnt = get_container(ctx, ctx.last_id, opt)
+	cnt = get_container(ctx, ctx.last_id, opt) or { panic(err) }
 	cnt.rect = mu_layout_next(ctx)
 	if ~opt & mu_opt_noframe {
 		ctx.draw_frame(ctx, cnt.rect, mu_color_panelbg)
