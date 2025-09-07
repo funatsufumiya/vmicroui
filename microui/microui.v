@@ -1396,12 +1396,9 @@ pub fn begin_root_container(ctx &Mu_Context, cnt &Mu_Container) {
 	// clipping is reset here in case a root-container is made within
 	//  * another root-containers's begin/end block; this prevents the inner
 	//  * root-container being clipped to the outer
-	for {
-		assert ctx.clip_stack.idx < ctx.clip_stack.items.len;
-
-		(ctx.clip_stack).items[(ctx.clip_stack).idx] = unclipped_rect
-		(ctx.clip_stack).idx++
-	}
+	(ctx.clip_stack).items[(ctx.clip_stack).idx] = unclipped_rect
+	(ctx.clip_stack).idx++
+	assert ctx.clip_stack.idx < ctx.clip_stack.items.len;
 }
 
 pub fn end_root_container(ctx &Mu_Context) {
