@@ -3,7 +3,8 @@ V-lang port: ***Work-In-Progress***
 mostly `v translate`-d, handwritten modifications mostly done, but now debugging segfault.
 
 ```bash
-$ v run demo/demo.v
+$ git clone https://github.com/funatsufumiya/vmicroui ~/.vmodules/microui
+$ v run ~/.vmodules/microui/demo/demo.v
 ```
 
 ```bash
