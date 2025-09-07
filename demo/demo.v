@@ -2,7 +2,6 @@ module main
 
 import gg
 import microui
-import microui_renderer
 
 const win_width = 400
 const win_height = 300
@@ -50,9 +49,9 @@ fn process_frame(app &App) {
 	for microui.mu_next_command(ctx, cmd) {
 		unsafe {
 			match microui.mu_command_type(cmd) {
-				microui.mu_command_text { microui_renderer.r_draw_text(app.gg, microui.mu_cmd_str(cmd.text.str), cmd.text.pos, cmd.text.color) }
-				microui.mu_command_rect { microui_renderer.r_draw_rect(app.gg, cmd.rect.rect, cmd.rect.color) }
-				// microui.mu_command_icon { microui_renderer.r_draw_icon(app.gg, cmd.icon.id, cmd.icon.rect, cmd.icon.color) }
+				microui.mu_command_text { microui.gg_r_draw_text(app.gg, microui.mu_cmd_str(cmd.text.str), cmd.text.pos, cmd.text.color) }
+				microui.mu_command_rect { microui.gg_r_draw_rect(app.gg, cmd.rect.rect, cmd.rect.color) }
+				// microui.mu_command_icon { microui.gg_r_draw_icon(app.gg, cmd.icon.id, cmd.icon.rect, cmd.icon.color) }
 				else {}
 			}
 		}
