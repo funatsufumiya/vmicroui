@@ -1333,7 +1333,7 @@ fn mu_header_ex(ctx &Mu_Context, label &i8, opt int) int {
 fn mu_begin_treenode_ex(ctx &Mu_Context, label &i8, opt int) int {
 	res := header(ctx, label, 1, opt)
 	if res & mu_res_active {
-		get_layout(ctx).indent += ctx.style.indent
+		get_layout(ctx).indent += ctx.style.indent;
 		(ctx.id_stack).items[(ctx.id_stack).idx] = (ctx.last_id)
 		(ctx.id_stack).idx++
 		assert (ctx.id_stack).idx < ctx.id_stack.items.len;
