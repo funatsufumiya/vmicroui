@@ -622,9 +622,9 @@ fn pop_container(ctx &Mu_Context) {
 	cnt := mu_get_current_container(ctx)
 	layout := get_layout(ctx)
 	cnt.content_size.x = layout.max.x - layout.body.x
-	cnt.content_size.y = layout.max.y - layout.body.y
+	cnt.content_size.y = layout.max.y - layout.body.y;
 	// pop container, layout and id
-	(ctx.container_stack).idx--
+	(ctx.container_stack).idx--;
 	assert ((ctx.container_stack).idx > 0);
 
 	(ctx.layout_stack).idx--
@@ -643,7 +643,7 @@ fn get_container(ctx &Mu_Context, id Mu_Id, opt int) &Mu_Container {
 	// try to get existing container from pool
 	idx := mu_pool_get(ctx, ctx.container_pool, 48, id)
 	if idx >= 0 {
-		if ctx.containers[idx].C.open || ~opt & mu_opt_closed {
+		if ctx.containers[idx].open || ~opt & mu_opt_closed {
 			mu_pool_update(ctx, ctx.container_pool, idx)
 		}
 		return &ctx.containers[idx]
