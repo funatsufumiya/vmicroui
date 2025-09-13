@@ -23,9 +23,7 @@ fn main() {
 		frame_fn:      frame
 		user_data:     app
 	)
-	ctx := microui.new_context()
-	microui.mu_init(ctx)
-	app.mu = ctx
+	microui.mu_init(app.mu)
 	app.gg.run()
 }
 
@@ -38,9 +36,9 @@ fn frame(app &App) {
 fn process_frame(app &App) {
 	mut ctx := app.mu
 	microui.mu_begin(ctx)
-	if microui.mu_begin_window(ctx, 'Hello', microui.Mu_Rect{50, 50, 300, 100}) {
+	if microui.mu_begin_window(ctx, c'Hello', microui.Mu_Rect{50, 50, 300, 100}) {
 		microui.mu_layout_row(ctx, 1, [280], 0)
-		microui.mu_label(ctx, 'Hello, microui!')
+		microui.mu_label(ctx, c'Hello, microui!')
 		microui.mu_end_window(ctx)
 	}
 	microui.mu_end(ctx)
