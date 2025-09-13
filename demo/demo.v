@@ -56,7 +56,7 @@ fn process_frame(app &App) {
 			match microui.mu_command_type(cmd) {
 				microui.mu_command_text { 
 					microui.gg_r_draw_text(app.gg, microui.mu_cmd_str(cmd.text.str), cmd.text.pos, cmd.text.color)
-					println("draw_text pos: ${cmd.text.pos}, color: ${cmd.text.color}")
+					println("draw_text text: ${microui.mu_cmd_str(cmd.text.str)}, pos: ${cmd.text.pos}, color: ${cmd.text.color}")
 				}
 				microui.mu_command_rect {
 					microui.gg_r_draw_rect(app.gg, cmd.rect.rect, cmd.rect.color)
