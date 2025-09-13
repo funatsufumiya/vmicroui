@@ -22,3 +22,18 @@ pub fn gg_r_set_clip_rect(ctx &gg.Context, rect microui.Mu_Rect) {
     // ctx.set_clip_rect(rect.x, rect.y, rect.w, rect.h)
     // currently do nothing
 }
+
+pub fn gg_r_text_width(font microui.Mu_Font, text &char, len int) int {
+  len_ := if len == -1 {
+        unsafe { C.strlen(text) }
+    }else {
+        len
+    }
+  return unsafe { C.strlen(text) } // WORKAROUND
+//   return r_get_text_width(text, len);
+}
+
+pub fn gg_r_text_height(font microui.Mu_Font) int {
+//   return r_get_text_height();
+    return 30 // WORKAROUND
+}

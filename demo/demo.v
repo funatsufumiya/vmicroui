@@ -23,8 +23,10 @@ fn main() {
 		frame_fn:      frame
 		user_data:     app
 	)
-	ctx := microui.new_context()
+	mut ctx := microui.new_context()
 	microui.mu_init(ctx)
+	ctx.text_width = microui.gg_r_text_width
+	ctx.text_height = microui.gg_r_text_height
 	app.mu = ctx
 	app.gg.run()
 }
