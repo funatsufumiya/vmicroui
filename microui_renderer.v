@@ -2,23 +2,38 @@ module microui
 
 import gg
 
-pub fn gg_r_draw_text(ctx &gg.Context, text string, pos microui.Mu_Vec2, color microui.Mu_Color) {
+pub fn gg_r_draw_text(ctx &gg.Context, text string, pos C.mu_Vec2, color C.mu_Color) {
     ctx.draw_text(pos.x, pos.y, text,
         size:  30
         color: gg.Color{r: color.r, g: color.g, b: color.b, a: color.a}
     )
 }
 
-pub fn gg_r_draw_rect(ctx &gg.Context, rect microui.Mu_Rect, color microui.Mu_Color) {
+pub fn gg_r_draw_rect(ctx &gg.Context, rect C.mu_Rect, color C.mu_Color) {
     ctx.draw_rect_filled(rect.x, rect.y, rect.w, rect.h, gg.Color{r: color.r, g: color.g, b: color.b, a: color.a})
 }
 
-pub fn gg_r_draw_icon(ctx &gg.Context, id int, rect microui.Mu_Rect, color microui.Mu_Color) {
+pub fn gg_r_draw_icon(ctx &gg.Context, id int, rect C.mu_Rect, color C.mu_Color) {
     // workaround
     ctx.draw_rect_filled(rect.x, rect.y, rect.w, rect.h, gg.Color{r: color.r, g: color.g, b: color.b, a: color.a})
 }
 
-pub fn gg_r_set_clip_rect(ctx &gg.Context, rect microui.Mu_Rect) {
+pub fn gg_r_set_clip_rect(ctx &gg.Context, rect C.mu_Rect) {
     // ctx.set_clip_rect(rect.x, rect.y, rect.w, rect.h)
     // currently do nothing
+}
+
+pub fn gg_r_text_width(font C.mu_Font, text &char, len int) int {
+  len_ := if len == -1 {
+        unsafe { C.strlen(text) }
+    }else {
+        len
+    }
+  return unsafe { C.strlen(text) } // WORKAROUND
+//   return r_get_text_width(text, len);
+}
+
+pub fn gg_r_text_height(font C.mu_Font) int {
+//   return r_get_text_height();
+    return 30 // WORKAROUND
 }
