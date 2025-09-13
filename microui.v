@@ -371,14 +371,21 @@ pub fn draw_frame(ctx &Mu_Context, rect Mu_Rect, colorid int) {
 }
 
 pub fn mu_init(ctx &Mu_Context) {
-	C.memset(ctx, 0, sizeof(*ctx))
+	if unsafe { ctx == nil } {
+		C.memset(ctx, 0, sizeof(*ctx))
+	}
 	ctx.draw_frame = draw_frame
 	ctx._style = default_style
 	ctx.style = &ctx._style
 }
 
 pub fn mu_begin(ctx &Mu_Context) {
-	// assert (ctx.text_width && ctx.text_height);
+	if unsafe { ctx.text_height == nil } {
+		panic("ctx.text_height not set")
+	}
+	if unsafe { ctx.text_width == nil } {
+		panic("ctx.text_width not set")
+	}
 
 	ctx.command_list.idx = 0
 	ctx.root_list.idx = 0
@@ -916,6 +923,13 @@ pub fn mu_draw_control_frame(ctx &Mu_Context, id Mu_Id, rect Mu_Rect, colorid in
 }
 
 pub fn mu_draw_control_text(ctx &Mu_Context, str &i8, rect Mu_Rect, colorid int, opt int) {
+	if unsafe { ctx.text_height == nil } {
+		panic("ctx.text_height not set")
+	}
+	if unsafe { ctx.text_width == nil } {
+		panic("ctx.text_width not set")
+	}
+
 	pos := Mu_Vec2{}
 	font := ctx.style.font
 	tw := ctx.text_width(font, str, -1)
@@ -966,6 +980,13 @@ pub fn mu_update_control(ctx &Mu_Context, id Mu_Id, rect Mu_Rect, opt int) {
 }
 
 pub fn mu_text(ctx &Mu_Context, text &i8) {
+	if unsafe { ctx.text_height == nil } {
+		panic("ctx.text_height not set")
+	}
+	if unsafe { ctx.text_width == nil } {
+		panic("ctx.text_width not set")
+	}
+
 	start := &i8(0)
 	end := &i8(0)
 	p := text
@@ -1057,6 +1078,12 @@ pub fn mu_checkbox(ctx &Mu_Context, label &i8, state &int) int {
 }
 
 pub fn mu_textbox_raw(ctx &Mu_Context, buf &i8, bufsz int, id Mu_Id, r Mu_Rect, opt int) int {
+	if unsafe { ctx.text_height == nil } {
+		panic("ctx.text_height not set")
+	}
+	if unsafe { ctx.text_width == nil } {
+		panic("ctx.text_width not set")
+	}
 	res := 0
 	mu_update_control(ctx, id, r, opt | mu_opt_holdfocus)
 	if ctx.focus == id {
