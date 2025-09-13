@@ -2,6 +2,7 @@
 module microui
 
 #flag -I @VMODROOT/c/microui
+#flag -I @VMODROOT/c
 
 #include "microui.h"
 #include "microui.c"
@@ -711,8 +712,12 @@ pub fn mu_begin_panel(ctx &C.mu_Context, name &char) {
 
 // utilities
 
+#include "microui_util.h"
+
+pub fn C.mu_command_type (cmd &C.mu_Command) i32
+
 pub fn mu_command_type (cmd &C.mu_Command) i32 {
-	return unsafe{ cmd.@type }
+	return C.mu_command_type(cmd)
 }
 
 pub fn mu_str (str_i8 []i8) string {

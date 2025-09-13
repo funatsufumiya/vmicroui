@@ -10,6 +10,7 @@ struct App {
 mut:
 	gg    &gg.Context = unsafe { nil }
 	mu    &C.mu_Context = unsafe { nil }
+	cmd    &C.mu_Command = unsafe { nil }
 }
 
 fn main() {
@@ -48,18 +49,18 @@ fn process_frame(app &App) {
 	}
 	microui.mu_end(ctx)
 
-	mut cmd := C.mu_Command{}
-	for microui.mu_next_command(ctx, cmd) {
-		println(microui.mu_command_type(cmd))
+	for microui.mu_next_command(ctx, &app.cmd) {
+		cmd := app.cmd
+		// println(microui.mu_command_type(cmd))
 		unsafe {
 			match microui.mu_command_type(cmd) {
 				microui.mu_command_text { 
 					microui.gg_r_draw_text(app.gg, microui.mu_cmd_str(cmd.text.str), cmd.text.pos, cmd.text.color)
-					println("text")
+					// println("text")
 				}
 				microui.mu_command_rect {
 					microui.gg_r_draw_rect(app.gg, cmd.rect.rect, cmd.rect.color)
-					println("rect")
+					// println("rect")
 				}
 				// microui.mu_command_icon {
 				// 	microui.gg_r_draw_icon(app.gg, cmd.icon.id, cmd.icon.rect, cmd.icon.color)
