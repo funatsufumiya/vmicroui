@@ -220,8 +220,8 @@ pub mut:
 pub struct Mu_Context {
 pub mut:
 	// callbacks
-	text_width  fn (Mu_Font, &i8, int) int
-	text_height fn (Mu_Font) int
+	text_width  ?fn (Mu_Font, &i8, int) int
+	text_height ?fn (Mu_Font) int
 	draw_frame  fn (&Mu_Context, Mu_Rect, int)
 	// core state
 	_style          Mu_Style
@@ -714,8 +714,10 @@ pub fn mu_draw_box(ctx &Mu_Context, rect Mu_Rect, color Mu_Color) {
 }
 
 pub fn mu_draw_text(ctx &Mu_Context, font Mu_Font, str &i8, len int, pos Mu_Vec2, color Mu_Color) {
+	text_width := ctx.text_width or { panic(err) }
+	text_height := ctx.text_height or { panic(err) }
 	cmd := &Mu_Command(0)
-	rect := mu_rect(pos.x, pos.y, ctx.text_width(font, str, len), ctx.text_height(font))
+	rect := mu_rect(pos.x, pos.y, text_width(font, str, len), text_height(font))
 	clipped := mu_check_clip(ctx, rect)
 	if clipped == mu_clip_all {
 		return
@@ -916,11 +918,13 @@ pub fn mu_draw_control_frame(ctx &Mu_Context, id Mu_Id, rect Mu_Rect, colorid in
 }
 
 pub fn mu_draw_control_text(ctx &Mu_Context, str &i8, rect Mu_Rect, colorid int, opt int) {
+	text_width := ctx.text_width or { panic(err) }
+	text_height := ctx.text_height or { panic(err) }
 	pos := Mu_Vec2{}
 	font := ctx.style.font
-	tw := ctx.text_width(font, str, -1)
+	tw := text_width(font, str, -1)
 	mu_push_clip_rect(ctx, rect)
-	pos.y = rect.y + (rect.h - ctx.text_height(font)) / 2
+	pos.y = rect.y + (rect.h - text_height(font)) / 2
 	if opt & mu_opt_aligncenter {
 		pos.x = rect.x + (rect.w - tw) / 2
 	} else if opt & mu_opt_alignright {
@@ -966,6 +970,8 @@ pub fn mu_update_control(ctx &Mu_Context, id Mu_Id, rect Mu_Rect, opt int) {
 }
 
 pub fn mu_text(ctx &Mu_Context, text &i8) {
+	text_width := ctx.text_width or { panic(err) }
+	text_height := ctx.text_height or { panic(err) }
 	start := &i8(0)
 	end := &i8(0)
 	p := text
@@ -974,7 +980,7 @@ pub fn mu_text(ctx &Mu_Context, text &i8) {
 	font := ctx.style.font
 	color := ctx.style.colors[int(mu_color_text)]
 	mu_layout_begin_column(ctx)
-	mu_layout_row_impl(ctx, 1, &width, ctx.text_height(font))
+	mu_layout_row_impl(ctx, 1, &width, text_height(font))
 	for {
 		r := mu_layout_next(ctx)
 		w := 0
@@ -985,11 +991,11 @@ pub fn mu_text(ctx &Mu_Context, text &i8) {
 			for *p && *p != c' '[0] && *p != c'\n'[0] {
 				p++
 			}
-			w += ctx.text_width(font, word, p - word)
+			w += text_width(font, word, p - word)
 			if w > r.w && end != start {
 				break
 			}
-			w += ctx.text_width(font, p, 1)
+			w += text_width(font, p, 1)
 			end = p++
 			// while()
 			if !(*end && *end != c'\n'[0]) {
@@ -1057,6 +1063,8 @@ pub fn mu_checkbox(ctx &Mu_Context, label &i8, state &int) int {
 }
 
 pub fn mu_textbox_raw(ctx &Mu_Context, buf &i8, bufsz int, id Mu_Id, r Mu_Rect, opt int) int {
+	text_width := ctx.text_width or { panic(err) }
+	text_height := ctx.text_height or { panic(err) }
 	res := 0
 	mu_update_control(ctx, id, r, opt | mu_opt_holdfocus)
 	if ctx.focus == id {
@@ -1093,8 +1101,8 @@ pub fn mu_textbox_raw(ctx &Mu_Context, buf &i8, bufsz int, id Mu_Id, r Mu_Rect, 
 	if ctx.focus == id {
 		color := ctx.style.colors[int(mu_color_text)]
 		font := ctx.style.font
-		textw := ctx.text_width(font, buf, -1)
-		texth := ctx.text_height(font)
+		textw := text_width(font, buf, -1)
+		texth := text_height(font)
 		ofx := r.w - ctx.style.padding - textw - 1
 		textx := r.x + (if ofx < (ctx.style.padding) { ofx } else { (ctx.style.padding) })
 		texty := r.y + (r.h - texth) / 2
