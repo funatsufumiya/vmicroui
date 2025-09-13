@@ -480,8 +480,8 @@ pub fn mu_push_id(ctx &Mu_Context, data voidptr, size int) {
 }
 
 pub fn mu_pop_id(ctx &Mu_Context) {
-	(ctx.id_stack).idx--
 	assert ctx.id_stack.idx > 0;
+	(ctx.id_stack).idx--
 }
 
 pub fn mu_push_clip_rect(ctx &Mu_Context, rect Mu_Rect) {
@@ -492,8 +492,8 @@ pub fn mu_push_clip_rect(ctx &Mu_Context, rect Mu_Rect) {
 }
 
 pub fn mu_pop_clip_rect(ctx &Mu_Context) {
-	(ctx.clip_stack).idx--
 	assert ((ctx.clip_stack).idx > 0);
+	(ctx.clip_stack).idx--
 }
 
 pub fn mu_get_clip_rect(ctx &Mu_Context) Mu_Rect {
@@ -536,11 +536,11 @@ pub fn pop_container(ctx &Mu_Context) {
 	cnt.content_size.x = layout.max.x - layout.body.x
 	cnt.content_size.y = layout.max.y - layout.body.y;
 	// pop container, layout and id
-	(ctx.container_stack).idx--;
 	assert ((ctx.container_stack).idx > 0);
+	(ctx.container_stack).idx--;
 
-	(ctx.layout_stack).idx--
 	assert (ctx.layout_stack).idx > 0;
+	(ctx.layout_stack).idx--
 
 	mu_pop_id(ctx)
 }
