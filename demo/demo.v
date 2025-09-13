@@ -43,8 +43,8 @@ fn process_frame(app &App) {
 	microui.mu_begin(ctx)
 	rect := C.mu_Rect{50, 50, 300, 100}
 	if microui.mu_begin_window(ctx, c'Hello', rect) {
-		// microui.mu_layout_row(ctx, 1, [280], 0)
-		// microui.mu_label(ctx, c'Hello, microui!')
+		microui.mu_layout_row(ctx, 1, [i32(280)], 0)
+		microui.mu_label(ctx, c'Hello, microui!')
 		microui.mu_end_window(ctx)
 	}
 	microui.mu_end(ctx)
@@ -56,15 +56,17 @@ fn process_frame(app &App) {
 			match microui.mu_command_type(cmd) {
 				microui.mu_command_text { 
 					microui.gg_r_draw_text(app.gg, microui.mu_cmd_str(cmd.text.str), cmd.text.pos, cmd.text.color)
-					// println("text")
+					println("draw_text pos: ${cmd.text.pos}, color: ${cmd.text.color}")
 				}
 				microui.mu_command_rect {
 					microui.gg_r_draw_rect(app.gg, cmd.rect.rect, cmd.rect.color)
-					// println("rect")
+					println("draw_rect rect: ${cmd.rect.rect}, color: ${cmd.rect.color}")
 				}
-				// microui.mu_command_icon {
-				// 	microui.gg_r_draw_icon(app.gg, cmd.icon.id, cmd.icon.rect, cmd.icon.color)
-				// }
+				microui.mu_command_icon {
+					// microui.gg_r_draw_icon(app.gg, cmd.icon.id, cmd.icon.rect, cmd.icon.color)
+				}
+				microui.mu_command_clip {
+				}
 				else {}
 			}
 		}

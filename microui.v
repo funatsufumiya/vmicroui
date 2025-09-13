@@ -497,7 +497,7 @@ pub fn mu_draw_icon(ctx &C.mu_Context, id i32, rect C.mu_Rect, color C.mu_Color)
 fn C.mu_layout_row(ctx &C.mu_Context, items i32, widths &i32, height i32)
 
 pub fn mu_layout_row(ctx &C.mu_Context, items i32, widths []i32, height i32) {
-	C.mu_layout_row(ctx, items, &widths, height)
+	C.mu_layout_row(ctx, items, widths.data, height)
 }
 
 fn C.mu_layout_width(ctx &C.mu_Context, width i32)
