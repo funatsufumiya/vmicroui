@@ -13,7 +13,7 @@ pub fn gg_r_draw_rect(ctx &gg.Context, rect C.mu_Rect, color C.mu_Color) {
     ctx.draw_rect_filled(rect.x, rect.y, rect.w, rect.h, gg.Color{r: color.r, g: color.g, b: color.b, a: color.a})
 }
 
-pub fn gg_r_draw_icon(ctx &gg.Context, id int, rect C.mu_Rect, color C.mu_Color) {
+pub fn gg_r_draw_icon(ctx &gg.Context, id i32, rect C.mu_Rect, color C.mu_Color) {
     // workaround
     ctx.draw_rect_filled(rect.x, rect.y, rect.w, rect.h, gg.Color{r: color.r, g: color.g, b: color.b, a: color.a})
 }
@@ -23,13 +23,13 @@ pub fn gg_r_set_clip_rect(ctx &gg.Context, rect C.mu_Rect) {
     // currently do nothing
 }
 
-pub fn gg_r_text_width(font C.mu_Font, text &char, len int) int {
+pub fn gg_r_text_width(font C.mu_Font, text &char, len i32) i32 {
   len_ := if len == -1 {
         unsafe { C.strlen(text) }
     }else {
         len
     }
-  return unsafe { C.strlen(text) } // WORKAROUND
+  return unsafe { i32(C.strlen(text)) } // WORKAROUND
 //   return r_get_text_width(text, len);
 }
 
