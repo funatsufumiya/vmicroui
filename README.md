@@ -1,7 +1,5 @@
 V-lang port: ***Work-In-Progress***
 
-mostly `v translate`-d, handwritten modifications mostly done, now debugging.
-
 ```bash
 $ git clone https://github.com/funatsufumiya/vmicroui ~/.vmodules/microui
 $ v run ~/.vmodules/microui/demo/demo.v
