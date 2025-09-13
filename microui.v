@@ -15,15 +15,15 @@ module microui
 
 // empty enum
 pub const mu_clip_part = 1
-pub const mu_clip_all = 1
+pub const mu_clip_all = 2
 
 // empty enum
 pub const mu_command_jump = 1
-pub const mu_command_clip = 1
-pub const mu_command_rect = 2
-pub const mu_command_text = 3
-pub const mu_command_icon = 4
-pub const mu_command_max = 5
+pub const mu_command_clip = 2
+pub const mu_command_rect = 3
+pub const mu_command_text = 4
+pub const mu_command_icon = 5
+pub const mu_command_max = 6
 
 // empty enum
 pub const mu_color_text = 0
@@ -44,10 +44,10 @@ pub const mu_color_max = 14
 
 // empty enum
 pub const mu_icon_close = 1
-pub const mu_icon_check = 1
-pub const mu_icon_collapsed = 2
-pub const mu_icon_expanded = 3
-pub const mu_icon_max = 4
+pub const mu_icon_check = 2
+pub const mu_icon_collapsed = 3
+pub const mu_icon_expanded = 4
+pub const mu_icon_max = 5
 
 // empty enum
 pub const mu_res_active = 1 << 0
