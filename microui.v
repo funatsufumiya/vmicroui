@@ -89,17 +89,17 @@ pub type C.mu_Font = voidptr
 @[typedef]
 pub struct C.mu_Vec2 {
 pub mut:
-	x i32
-	y i32
+	x int
+	y int
 }
 
 @[typedef]
 pub struct C.mu_Rect {
 pub mut:
-	x i32
-	y i32
-	w i32
-	h i32
+	x int
+	y int
+	w int
+	h int
 }
 
 @[typedef]
@@ -115,14 +115,14 @@ pub mut:
 pub struct C.mu_PoolItem {
 pub mut:
 	id          C.mu_Id
-	last_update i32
+	last_update int
 }
 
 @[typedef]
 pub struct C.mu_BaseCommand {
 pub mut:
-	@type i32
-	size  i32
+	@type int
+	size  int
 }
 
 @[typedef]
@@ -162,14 +162,14 @@ pub struct C.mu_IconCommand {
 pub mut:
 	base  C.mu_BaseCommand
 	rect  C.mu_Rect
-	id    i32
+	id    int
 	color C.mu_Color
 }
 
 @[typedef]
 pub union C.mu_Command {
 pub mut:
-	@type i32
+	@type int
 	base  C.mu_BaseCommand
 	jump  C.mu_JumpCommand
 	clip  C.mu_ClipCommand
@@ -186,12 +186,12 @@ pub mut:
 	position   C.mu_Vec2
 	size       C.mu_Vec2
 	max        C.mu_Vec2
-	widths     [16]i32
-	items      i32
-	item_index i32
-	next_row   i32
-	next_type  i32
-	indent     i32
+	widths     [16]int
+	items      int
+	item_index int
+	next_row   int
+	next_type  int
+	indent     int
 }
 
 @[typedef]
@@ -203,8 +203,8 @@ pub mut:
 	body         C.mu_Rect
 	content_size C.mu_Vec2
 	scroll       C.mu_Vec2
-	zindex       i32
-	open         i32
+	zindex       int
+	open         int
 }
 
 @[typedef]
@@ -212,12 +212,12 @@ pub struct C.mu_Style {
 pub mut:
 	font           C.mu_Font
 	size           C.mu_Vec2
-	padding        i32
-	spacing        i32
-	indent         i32
-	title_height   i32
-	scrollbar_size i32
-	thumb_size     i32
+	padding        int
+	spacing        int
+	indent         int
+	title_height   int
+	scrollbar_size int
+	thumb_size     int
 	colors         [14]C.mu_Color
 }
 
@@ -225,9 +225,9 @@ pub mut:
 pub struct C.mu_Context {
 pub mut:
 	// callbacks
-	text_width  fn (C.mu_Font, &char, i32) i32
-	text_height fn (C.mu_Font) i32
-	draw_frame  fn (&C.mu_Context, C.mu_Rect, i32)
+	text_width  fn (C.mu_Font, &char, int) int
+	text_height fn (C.mu_Font) int
+	draw_frame  fn (&C.mu_Context, C.mu_Rect, int)
 	// core state
 	_style          C.mu_Style
 	style           &C.mu_Style
@@ -235,9 +235,9 @@ pub mut:
 	focus           C.mu_Id
 	last_id         C.mu_Id
 	last_rect       C.mu_Rect
-	last_zindex     i32
-	updated_focus   i32
-	frame           i32
+	last_zindex     int
+	updated_focus   int
+	frame           int
 	hover_root      &C.mu_Container
 	next_hover_root &C.mu_Container
 	scroll_target   &C.mu_Container
@@ -245,32 +245,32 @@ pub mut:
 	number_edit     C.mu_Id
 	// stacks
 	command_list struct {
-		idx   i32
+		idx   int
 		items [262144]i8
 	}
 
 	root_list struct {
-		idx   i32
+		idx   int
 		items [32]&C.mu_Container
 	}
 
 	container_stack struct {
-		idx   i32
+		idx   int
 		items [32]&C.mu_Container
 	}
 
 	clip_stack struct {
-		idx   i32
+		idx   int
 		items [32]C.mu_Rect
 	}
 
 	id_stack struct {
-		idx   i32
+		idx   int
 		items [32]C.mu_Id
 	}
 
 	layout_stack struct {
-		idx   i32
+		idx   int
 		items [16]C.mu_Layout
 	}
 
@@ -283,28 +283,28 @@ pub mut:
 	last_mouse_pos C.mu_Vec2
 	mouse_delta    C.mu_Vec2
 	scroll_delta   C.mu_Vec2
-	mouse_down     i32
-	mouse_pressed  i32
-	key_down       i32
-	key_pressed    i32
+	mouse_down     int
+	mouse_pressed  int
+	key_down       int
+	key_pressed    int
 	input_text     [32]i8
 }
 
-fn C.mu_vec2(x i32, y i32) C.mu_Vec2
+fn C.mu_vec2(x int, y int) C.mu_Vec2
 
-pub fn mu_vec2(x i32, y i32) C.mu_Vec2 {
+pub fn mu_vec2(x int, y int) C.mu_Vec2 {
 	return C.mu_vec2(x, y)
 }
 
-fn C.mu_rect(x i32, y i32, w i32, h i32) C.mu_Rect
+fn C.mu_rect(x int, y int, w int, h int) C.mu_Rect
 
-pub fn mu_rect(x i32, y i32, w i32, h i32) C.mu_Rect {
+pub fn mu_rect(x int, y int, w int, h int) C.mu_Rect {
 	return C.mu_rect(x, y, w, h)
 }
 
-fn C.mu_color(r i32, g i32, b i32, a i32) C.mu_Color
+fn C.mu_color(r int, g int, b int, a int) C.mu_Color
 
-pub fn mu_color(r i32, g i32, b i32, a i32) C.mu_Color {
+pub fn mu_color(r int, g int, b int, a int) C.mu_Color {
 	return C.mu_color(r, g, b, a)
 }
 
@@ -332,15 +332,15 @@ pub fn mu_set_focus(ctx &C.mu_Context, id C.mu_Id) {
 	C.mu_set_focus(ctx, id)
 }
 
-fn C.mu_get_id(ctx &C.mu_Context, data voidptr, size i32) C.mu_Id
+fn C.mu_get_id(ctx &C.mu_Context, data voidptr, size int) C.mu_Id
 
-pub fn mu_get_id(ctx &C.mu_Context, data voidptr, size i32) C.mu_Id {
+pub fn mu_get_id(ctx &C.mu_Context, data voidptr, size int) C.mu_Id {
 	return C.mu_get_id(ctx, data, size)
 }
 
-fn C.mu_push_id(ctx &C.mu_Context, data voidptr, size i32)
+fn C.mu_push_id(ctx &C.mu_Context, data voidptr, size int)
 
-pub fn mu_push_id(ctx &C.mu_Context, data voidptr, size i32) {
+pub fn mu_push_id(ctx &C.mu_Context, data voidptr, size int) {
 	C.mu_push_id(ctx, data, size)
 }
 
@@ -368,9 +368,9 @@ pub fn mu_get_clip_rect(ctx &C.mu_Context) C.mu_Rect {
 	return C.mu_get_clip_rect(ctx)
 }
 
-fn C.mu_check_clip(ctx &C.mu_Context, r C.mu_Rect) i32
+fn C.mu_check_clip(ctx &C.mu_Context, r C.mu_Rect) int
 
-pub fn mu_check_clip(ctx &C.mu_Context, r C.mu_Rect) i32 {
+pub fn mu_check_clip(ctx &C.mu_Context, r C.mu_Rect) int {
 	return C.mu_check_clip(ctx, r)
 }
 
@@ -392,57 +392,57 @@ pub fn mu_bring_to_front(ctx &C.mu_Context, cnt &C.mu_Container) {
 	C.mu_bring_to_front(ctx, cnt)
 }
 
-fn C.mu_pool_init(ctx &C.mu_Context, items &C.mu_PoolItem, len i32, id C.mu_Id) i32
+fn C.mu_pool_init(ctx &C.mu_Context, items &C.mu_PoolItem, len int, id C.mu_Id) int
 
-pub fn mu_pool_init(ctx &C.mu_Context, items &C.mu_PoolItem, len i32, id C.mu_Id) i32 {
+pub fn mu_pool_init(ctx &C.mu_Context, items &C.mu_PoolItem, len int, id C.mu_Id) int {
 	return C.mu_pool_init(ctx, items, len, id)
 }
 
-fn C.mu_pool_get(ctx &C.mu_Context, items &C.mu_PoolItem, len i32, id C.mu_Id) i32
+fn C.mu_pool_get(ctx &C.mu_Context, items &C.mu_PoolItem, len int, id C.mu_Id) int
 
-pub fn mu_pool_get(ctx &C.mu_Context, items &C.mu_PoolItem, len i32, id C.mu_Id) i32 {
+pub fn mu_pool_get(ctx &C.mu_Context, items &C.mu_PoolItem, len int, id C.mu_Id) int {
 	return C.mu_pool_get(ctx, items, len, id)
 }
 
-fn C.mu_pool_update(ctx &C.mu_Context, items &C.mu_PoolItem, idx i32)
+fn C.mu_pool_update(ctx &C.mu_Context, items &C.mu_PoolItem, idx int)
 
-pub fn mu_pool_update(ctx &C.mu_Context, items &C.mu_PoolItem, idx i32) {
+pub fn mu_pool_update(ctx &C.mu_Context, items &C.mu_PoolItem, idx int) {
 	C.mu_pool_update(ctx, items, idx)
 }
 
-fn C.mu_input_mousemove(ctx &C.mu_Context, x i32, y i32)
+fn C.mu_input_mousemove(ctx &C.mu_Context, x int, y int)
 
-pub fn mu_input_mousemove(ctx &C.mu_Context, x i32, y i32) {
+pub fn mu_input_mousemove(ctx &C.mu_Context, x int, y int) {
 	C.mu_input_mousemove(ctx, x, y)
 }
 
-fn C.mu_input_mousedown(ctx &C.mu_Context, x i32, y i32, btn i32)
+fn C.mu_input_mousedown(ctx &C.mu_Context, x int, y int, btn int)
 
-pub fn mu_input_mousedown(ctx &C.mu_Context, x i32, y i32, btn i32) {
+pub fn mu_input_mousedown(ctx &C.mu_Context, x int, y int, btn int) {
 	C.mu_input_mousedown(ctx, x, y, btn)
 }
 
-fn C.mu_input_mouseup(ctx &C.mu_Context, x i32, y i32, btn i32)
+fn C.mu_input_mouseup(ctx &C.mu_Context, x int, y int, btn int)
 
-pub fn mu_input_mouseup(ctx &C.mu_Context, x i32, y i32, btn i32) {
+pub fn mu_input_mouseup(ctx &C.mu_Context, x int, y int, btn int) {
 	C.mu_input_mouseup(ctx, x, y, btn)
 }
 
-fn C.mu_input_scroll(ctx &C.mu_Context, x i32, y i32)
+fn C.mu_input_scroll(ctx &C.mu_Context, x int, y int)
 
-pub fn mu_input_scroll(ctx &C.mu_Context, x i32, y i32) {
+pub fn mu_input_scroll(ctx &C.mu_Context, x int, y int) {
 	C.mu_input_scroll(ctx, x, y)
 }
 
-fn C.mu_input_keydown(ctx &C.mu_Context, key i32)
+fn C.mu_input_keydown(ctx &C.mu_Context, key int)
 
-pub fn mu_input_keydown(ctx &C.mu_Context, key i32) {
+pub fn mu_input_keydown(ctx &C.mu_Context, key int) {
 	C.mu_input_keydown(ctx, key)
 }
 
-fn C.mu_input_keyup(ctx &C.mu_Context, key i32)
+fn C.mu_input_keyup(ctx &C.mu_Context, key int)
 
-pub fn mu_input_keyup(ctx &C.mu_Context, key i32) {
+pub fn mu_input_keyup(ctx &C.mu_Context, key int) {
 	C.mu_input_keyup(ctx, key)
 }
 
@@ -452,13 +452,13 @@ pub fn mu_input_text(ctx &C.mu_Context, text &char) {
 	C.mu_input_text(ctx, text)
 }
 
-fn C.mu_push_command(ctx &C.mu_Context, type_ i32, size i32) &C.mu_Command
+fn C.mu_push_command(ctx &C.mu_Context, type_ int, size int) &C.mu_Command
 
-pub fn mu_push_command(ctx &C.mu_Context, type_ i32, size i32) &C.mu_Command {
+pub fn mu_push_command(ctx &C.mu_Context, type_ int, size int) &C.mu_Command {
 	return C.mu_push_command(ctx, type_, size)
 }
 
-fn C.mu_next_command(ctx &C.mu_Context, cmd &&C.mu_Command) i32
+fn C.mu_next_command(ctx &C.mu_Context, cmd &&C.mu_Command) int
 
 pub fn mu_next_command(ctx &C.mu_Context, cmd &&C.mu_Command) bool {
 	return C.mu_next_command(ctx, cmd) == 1
@@ -482,33 +482,33 @@ pub fn mu_draw_box(ctx &C.mu_Context, rect C.mu_Rect, color C.mu_Color) {
 	C.mu_draw_box(ctx, rect, color)
 }
 
-fn C.mu_draw_text(ctx &C.mu_Context, font C.mu_Font, str &char, len i32, pos C.mu_Vec2, color C.mu_Color)
+fn C.mu_draw_text(ctx &C.mu_Context, font C.mu_Font, str &char, len int, pos C.mu_Vec2, color C.mu_Color)
 
-pub fn mu_draw_text(ctx &C.mu_Context, font C.mu_Font, str &char, len i32, pos C.mu_Vec2, color C.mu_Color) {
+pub fn mu_draw_text(ctx &C.mu_Context, font C.mu_Font, str &char, len int, pos C.mu_Vec2, color C.mu_Color) {
 	C.mu_draw_text(ctx, font, str, len, pos, color)
 }
 
-fn C.mu_draw_icon(ctx &C.mu_Context, id i32, rect C.mu_Rect, color C.mu_Color)
+fn C.mu_draw_icon(ctx &C.mu_Context, id int, rect C.mu_Rect, color C.mu_Color)
 
-pub fn mu_draw_icon(ctx &C.mu_Context, id i32, rect C.mu_Rect, color C.mu_Color) {
+pub fn mu_draw_icon(ctx &C.mu_Context, id int, rect C.mu_Rect, color C.mu_Color) {
 	C.mu_draw_icon(ctx, id, rect, color)
 }
 
-fn C.mu_layout_row(ctx &C.mu_Context, items i32, widths &i32, height i32)
+fn C.mu_layout_row(ctx &C.mu_Context, items int, widths &int, height int)
 
-pub fn mu_layout_row(ctx &C.mu_Context, items i32, widths []i32, height i32) {
+pub fn mu_layout_row(ctx &C.mu_Context, items int, widths []int, height int) {
 	C.mu_layout_row(ctx, items, widths.data, height)
 }
 
-fn C.mu_layout_width(ctx &C.mu_Context, width i32)
+fn C.mu_layout_width(ctx &C.mu_Context, width int)
 
-pub fn mu_layout_width(ctx &C.mu_Context, width i32) {
+pub fn mu_layout_width(ctx &C.mu_Context, width int) {
 	C.mu_layout_width(ctx, width)
 }
 
-fn C.mu_layout_height(ctx &C.mu_Context, height i32)
+fn C.mu_layout_height(ctx &C.mu_Context, height int)
 
-pub fn mu_layout_height(ctx &C.mu_Context, height i32) {
+pub fn mu_layout_height(ctx &C.mu_Context, height int) {
 	C.mu_layout_height(ctx, height)
 }
 
@@ -524,9 +524,9 @@ pub fn mu_layout_end_column(ctx &C.mu_Context) {
 	C.mu_layout_end_column(ctx)
 }
 
-fn C.mu_layout_set_next(ctx &C.mu_Context, r C.mu_Rect, relative i32)
+fn C.mu_layout_set_next(ctx &C.mu_Context, r C.mu_Rect, relative int)
 
-pub fn mu_layout_set_next(ctx &C.mu_Context, r C.mu_Rect, relative i32) {
+pub fn mu_layout_set_next(ctx &C.mu_Context, r C.mu_Rect, relative int) {
 	C.mu_layout_set_next(ctx, r, relative)
 }
 
@@ -536,27 +536,27 @@ pub fn mu_layout_next(ctx &C.mu_Context) C.mu_Rect {
 	return C.mu_layout_next(ctx)
 }
 
-fn C.mu_draw_control_frame(ctx &C.mu_Context, id C.mu_Id, rect C.mu_Rect, colorid i32, opt i32)
+fn C.mu_draw_control_frame(ctx &C.mu_Context, id C.mu_Id, rect C.mu_Rect, colorid int, opt int)
 
-pub fn mu_draw_control_frame(ctx &C.mu_Context, id C.mu_Id, rect C.mu_Rect, colorid i32, opt i32) {
+pub fn mu_draw_control_frame(ctx &C.mu_Context, id C.mu_Id, rect C.mu_Rect, colorid int, opt int) {
 	C.mu_draw_control_frame(ctx, id, rect, colorid, opt)
 }
 
-fn C.mu_draw_control_text(ctx &C.mu_Context, str &char, rect C.mu_Rect, colorid i32, opt i32)
+fn C.mu_draw_control_text(ctx &C.mu_Context, str &char, rect C.mu_Rect, colorid int, opt int)
 
-pub fn mu_draw_control_text(ctx &C.mu_Context, str &char, rect C.mu_Rect, colorid i32, opt i32) {
+pub fn mu_draw_control_text(ctx &C.mu_Context, str &char, rect C.mu_Rect, colorid int, opt int) {
 	C.mu_draw_control_text(ctx, str, rect, colorid, opt)
 }
 
-fn C.mu_mouse_over(ctx &C.mu_Context, rect C.mu_Rect) i32
+fn C.mu_mouse_over(ctx &C.mu_Context, rect C.mu_Rect) int
 
-pub fn mu_mouse_over(ctx &C.mu_Context, rect C.mu_Rect) i32 {
+pub fn mu_mouse_over(ctx &C.mu_Context, rect C.mu_Rect) int {
 	return C.mu_mouse_over(ctx, rect)
 }
 
-fn C.mu_update_control(ctx &C.mu_Context, id C.mu_Id, rect C.mu_Rect, opt i32)
+fn C.mu_update_control(ctx &C.mu_Context, id C.mu_Id, rect C.mu_Rect, opt int)
 
-pub fn mu_update_control(ctx &C.mu_Context, id C.mu_Id, rect C.mu_Rect, opt i32) {
+pub fn mu_update_control(ctx &C.mu_Context, id C.mu_Id, rect C.mu_Rect, opt int) {
 	C.mu_update_control(ctx, id, rect, opt)
 }
 
@@ -572,51 +572,51 @@ pub fn mu_label(ctx &C.mu_Context, text &char) {
 	C.mu_label(ctx, text)
 }
 
-fn C.mu_button_ex(ctx &C.mu_Context, label &char, icon i32, opt i32) i32
+fn C.mu_button_ex(ctx &C.mu_Context, label &char, icon int, opt int) int
 
-pub fn mu_button_ex(ctx &C.mu_Context, label &char, icon i32, opt i32) i32 {
+pub fn mu_button_ex(ctx &C.mu_Context, label &char, icon int, opt int) int {
 	return C.mu_button_ex(ctx, label, icon, opt)
 }
 
-fn C.mu_checkbox(ctx &C.mu_Context, label &char, state &i32) i32
+fn C.mu_checkbox(ctx &C.mu_Context, label &char, state &int) int
 
-pub fn mu_checkbox(ctx &C.mu_Context, label &char, state &i32) i32 {
+pub fn mu_checkbox(ctx &C.mu_Context, label &char, state &int) int {
 	return C.mu_checkbox(ctx, label, state)
 }
 
-fn C.mu_textbox_raw(ctx &C.mu_Context, buf &char, bufsz i32, id C.mu_Id, r C.mu_Rect, opt i32) i32
+fn C.mu_textbox_raw(ctx &C.mu_Context, buf &char, bufsz int, id C.mu_Id, r C.mu_Rect, opt int) int
 
-pub fn mu_textbox_raw(ctx &C.mu_Context, buf &char, bufsz i32, id C.mu_Id, r C.mu_Rect, opt i32) i32 {
+pub fn mu_textbox_raw(ctx &C.mu_Context, buf &char, bufsz int, id C.mu_Id, r C.mu_Rect, opt int) int {
 	return C.mu_textbox_raw(ctx, buf, bufsz, id, r, opt)
 }
 
-fn C.mu_textbox_ex(ctx &C.mu_Context, buf &char, bufsz i32, opt i32) i32
+fn C.mu_textbox_ex(ctx &C.mu_Context, buf &char, bufsz int, opt int) int
 
-pub fn mu_textbox_ex(ctx &C.mu_Context, buf &char, bufsz i32, opt i32) i32 {
+pub fn mu_textbox_ex(ctx &C.mu_Context, buf &char, bufsz int, opt int) int {
 	return C.mu_textbox_ex(ctx, buf, bufsz, opt)
 }
 
-fn C.mu_slider_ex(ctx &C.mu_Context, value &C.mu_Real, low C.mu_Real, high C.mu_Real, step C.mu_Real, fmt &char, opt i32) i32
+fn C.mu_slider_ex(ctx &C.mu_Context, value &C.mu_Real, low C.mu_Real, high C.mu_Real, step C.mu_Real, fmt &char, opt int) int
 
-pub fn mu_slider_ex(ctx &C.mu_Context, value &f32, low f32, high f32, step f32, fmt &char, opt i32) i32 {
+pub fn mu_slider_ex(ctx &C.mu_Context, value &f32, low f32, high f32, step f32, fmt &char, opt int) int {
 	return C.mu_slider_ex(ctx, value, low, high, step, fmt, opt)
 }
 
-fn C.mu_number_ex(ctx &C.mu_Context, value &C.mu_Real, step C.mu_Real, fmt &char, opt i32) i32
+fn C.mu_number_ex(ctx &C.mu_Context, value &C.mu_Real, step C.mu_Real, fmt &char, opt int) int
 
-pub fn mu_number_ex(ctx &C.mu_Context, value &f32, step f32, fmt &char, opt i32) i32 {
+pub fn mu_number_ex(ctx &C.mu_Context, value &f32, step f32, fmt &char, opt int) int {
 	return C.mu_number_ex(ctx, value, step, fmt, opt)
 }
 
-fn C.mu_header_ex(ctx &C.mu_Context, label &char, opt i32) i32
+fn C.mu_header_ex(ctx &C.mu_Context, label &char, opt int) int
 
-pub fn mu_header_ex(ctx &C.mu_Context, label &char, opt i32) i32 {
+pub fn mu_header_ex(ctx &C.mu_Context, label &char, opt int) int {
 	return C.mu_header_ex(ctx, label, opt)
 }
 
-fn C.mu_begin_treenode_ex(ctx &C.mu_Context, label &char, opt i32) i32
+fn C.mu_begin_treenode_ex(ctx &C.mu_Context, label &char, opt int) int
 
-pub fn mu_begin_treenode_ex(ctx &C.mu_Context, label &char, opt i32) i32 {
+pub fn mu_begin_treenode_ex(ctx &C.mu_Context, label &char, opt int) int {
 	return C.mu_begin_treenode_ex(ctx, label, opt)
 }
 
@@ -626,9 +626,9 @@ pub fn mu_end_treenode(ctx &C.mu_Context) {
 	C.mu_end_treenode(ctx)
 }
 
-fn C.mu_begin_window_ex(ctx &C.mu_Context, title &char, rect C.mu_Rect, opt i32) i32
+fn C.mu_begin_window_ex(ctx &C.mu_Context, title &char, rect C.mu_Rect, opt int) int
 
-pub fn mu_begin_window_ex(ctx &C.mu_Context, title &char, rect C.mu_Rect, opt i32) bool {
+pub fn mu_begin_window_ex(ctx &C.mu_Context, title &char, rect C.mu_Rect, opt int) bool {
 	return C.mu_begin_window_ex(ctx, title, rect, opt) == 1
 }
 
@@ -644,9 +644,9 @@ pub fn mu_open_popup(ctx &C.mu_Context, name &char) {
 	C.mu_open_popup(ctx, name)
 }
 
-fn C.mu_begin_popup(ctx &C.mu_Context, name &char) i32
+fn C.mu_begin_popup(ctx &C.mu_Context, name &char) int
 
-pub fn mu_begin_popup(ctx &C.mu_Context, name &char) i32 {
+pub fn mu_begin_popup(ctx &C.mu_Context, name &char) int {
 	return C.mu_begin_popup(ctx, name)
 }
 
@@ -656,9 +656,9 @@ pub fn mu_end_popup(ctx &C.mu_Context) {
 	C.mu_end_popup(ctx)
 }
 
-fn C.mu_begin_panel_ex(ctx &C.mu_Context, name &char, opt i32)
+fn C.mu_begin_panel_ex(ctx &C.mu_Context, name &char, opt int)
 
-pub fn mu_begin_panel_ex(ctx &C.mu_Context, name &char, opt i32) {
+pub fn mu_begin_panel_ex(ctx &C.mu_Context, name &char, opt int) {
 	C.mu_begin_panel_ex(ctx, name, opt)
 }
 
@@ -678,27 +678,27 @@ pub fn mu_end_panel(ctx &C.mu_Context) {
 // #define mu_begin_panel(ctx, name)         mu_begin_panel_ex(ctx, name, 0)
 
 // V equivalents for the above macros
-pub fn mu_button(ctx &C.mu_Context, label &char) i32 {
+pub fn mu_button(ctx &C.mu_Context, label &char) int {
 	return mu_button_ex(ctx, label, 0, mu_opt_aligncenter)
 }
 
-pub fn mu_textbox(ctx &C.mu_Context, buf &char, bufsz i32) i32 {
+pub fn mu_textbox(ctx &C.mu_Context, buf &char, bufsz int) int {
 	return mu_textbox_ex(ctx, buf, bufsz, 0)
 }
 
-pub fn mu_slider(ctx &C.mu_Context, value &f32, lo f32, hi f32) i32 {
+pub fn mu_slider(ctx &C.mu_Context, value &f32, lo f32, hi f32) int {
 	return mu_slider_ex(ctx, value, lo, hi, 0, c'%.3g', mu_opt_aligncenter)
 }
 
-pub fn mu_number(ctx &C.mu_Context, value &f32, step f32) i32 {
+pub fn mu_number(ctx &C.mu_Context, value &f32, step f32) int {
 	return mu_number_ex(ctx, value, step, c'%.3g', mu_opt_aligncenter)
 }
 
-pub fn mu_header(ctx &C.mu_Context, label &char) i32 {
+pub fn mu_header(ctx &C.mu_Context, label &char) int {
 	return mu_header_ex(ctx, label, 0)
 }
 
-pub fn mu_begin_treenode(ctx &C.mu_Context, label &char) i32 {
+pub fn mu_begin_treenode(ctx &C.mu_Context, label &char) int {
 	return mu_begin_treenode_ex(ctx, label, 0)
 }
 
@@ -710,7 +710,7 @@ pub fn mu_begin_panel(ctx &C.mu_Context, name &char) {
 	mu_begin_panel_ex(ctx, name, 0)
 }
 
-// pub fn mu_min(a i32, b i32) {
+// pub fn mu_min(a int, b int) {
 // 	return (a) < (b) ? (a) : (b)
 // }
 
@@ -718,9 +718,9 @@ pub fn mu_begin_panel(ctx &C.mu_Context, name &char) {
 
 #include "microui_util.h"
 
-pub fn C.mu_command_type (cmd &C.mu_Command) i32
+pub fn C.mu_command_type (cmd &C.mu_Command) int
 
-pub fn mu_command_type (cmd &C.mu_Command) i32 {
+pub fn mu_command_type (cmd &C.mu_Command) int {
 	return C.mu_command_type(cmd)
 }
 

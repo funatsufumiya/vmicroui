@@ -38,7 +38,7 @@ fn main() {
 	app.gg.run()
 }
 
-fn mu_mouse_btn(btn gg.MouseButton) i32 {
+fn mu_mouse_btn(btn gg.MouseButton) int {
 	mut r := 0
 	match btn {
 		.left { r = microui.mu_mouse_left }
@@ -46,7 +46,7 @@ fn mu_mouse_btn(btn gg.MouseButton) i32 {
 		.middle { r = microui.mu_mouse_middle }
 		else {}
 	}
-	return i32(r)
+	return r
 }
 
 // static const char key_map[256] = {
@@ -60,7 +60,7 @@ fn mu_mouse_btn(btn gg.MouseButton) i32 {
 //   [ SDLK_BACKSPACE    & 0xff ] = MU_KEY_BACKSPACE,
 // };
 
-// fn mu_key(btn gg.KeyCode) i32 {
+// fn mu_key(btn gg.KeyCode) int {
 // 	mut r := 0
 // 	match btn {
 // 		.left { r = microui.mu_mouse_left }
@@ -68,31 +68,31 @@ fn mu_mouse_btn(btn gg.MouseButton) i32 {
 // 		.middle { r = microui.mu_mouse_middle }
 // 		else {}
 // 	}
-// 	return i32(r)
+// 	return int(r)
 // }
 
 fn on_mouse_move(x f32, y f32, app &App) {
-    microui.mu_input_mousemove(app.mu, i32(x), i32(y))
+    microui.mu_input_mousemove(app.mu, int(x), int(y))
 }
 
 fn on_mouse_down(x f32, y f32, btn gg.MouseButton, app &App) {
-	microui.mu_input_mousedown(app.mu, i32(x), i32(y), mu_mouse_btn(btn))
+	microui.mu_input_mousedown(app.mu, int(x), int(y), mu_mouse_btn(btn))
 }
 
 fn on_mouse_up(x f32, y f32, btn gg.MouseButton, app &App) {
-    microui.mu_input_mouseup(app.mu, i32(x), i32(y), mu_mouse_btn(btn))
+    microui.mu_input_mouseup(app.mu, int(x), int(y), mu_mouse_btn(btn))
 }
 
 fn on_mouse_scroll(ev &gg.Event, app &App) {
-    microui.mu_input_scroll(app.mu, i32(ev.mouse_dx), i32(ev.mouse_dy))
+    microui.mu_input_scroll(app.mu, int(ev.mouse_dx), int(ev.mouse_dy))
 }
 
 fn on_key_down(key gg.KeyCode, modifier gg.Modifier, app &App) {
-    microui.mu_input_keydown(app.mu, i32(key))
+    microui.mu_input_keydown(app.mu, int(key))
 }
 
 fn on_key_up(key gg.KeyCode, modifier gg.Modifier, app &App) {
-    microui.mu_input_keyup(app.mu, i32(key))
+    microui.mu_input_keyup(app.mu, int(key))
 }
 
 fn on_text_input(text string, app &App) {
@@ -110,15 +110,15 @@ fn process_frame(app &App) {
 	microui.mu_begin(ctx)
 	rect := C.mu_Rect{50, 50, 300, 100}
 	if microui.mu_begin_window(ctx, c'Hello', rect) {
-		microui.mu_layout_row(ctx, 1, [i32(280)], 0)
+		// microui.mu_layout_row(ctx, 1, [280], 0)
 		microui.mu_label(ctx, c'Hello, microui!')
-		microui.mu_layout_row(ctx, 2, [i32(80), i32(-1)], 0)
+		// microui.mu_layout_row(ctx, 2, [80, -1], 0)
 
 		if microui.mu_button(ctx, c'Click Me') != 0 {
 			println('Button was pressed!')
 		}
 
-		microui.mu_layout_row(ctx, 2, [i32(80), i32(-1)], 0)
+		// microui.mu_layout_row(ctx, 2, [80, -1], 0)
 		microui.mu_label(ctx, c'Slider:')
 		microui.mu_slider(ctx, &app.slider_val, 0, 100)
 		// microui.mu_label(ctx, ('Value: ${slider_val:.1f}').str)

@@ -16,7 +16,7 @@ pub fn gg_r_draw_rect(ctx &gg.Context, rect C.mu_Rect, color C.mu_Color) {
     ctx.draw_rect_filled(rect.x, rect.y, rect.w, rect.h, gg.Color{r: color.r, g: color.g, b: color.b, a: color.a})
 }
 
-pub fn gg_r_draw_icon(ctx &gg.Context, id i32, rect C.mu_Rect, color C.mu_Color) {
+pub fn gg_r_draw_icon(ctx &gg.Context, id int, rect C.mu_Rect, color C.mu_Color) {
     // workaround
     ctx.draw_rect_filled(rect.x, rect.y, rect.w, rect.h, gg.Color{r: color.r, g: color.g, b: color.b, a: color.a})
 }
@@ -26,20 +26,20 @@ pub fn gg_r_set_clip_rect(ctx &gg.Context, rect C.mu_Rect) {
     // currently do nothing
 }
 
-pub fn gg_r_text_width_fn(ctx &gg.Context) fn(font C.mu_Font, text &char, len i32) i32 {
+pub fn gg_r_text_width_fn(ctx &gg.Context) fn(font C.mu_Font, text &char, len int) int {
     text_width_fn := ctx.text_width
-    callback := fn [text_width_fn] (font C.mu_Font, text_ &char, len i32) i32 {
+    callback := fn [text_width_fn] (font C.mu_Font, text_ &char, len int) int {
        str := unsafe { cstring_to_vstring(text_) } 
-       return i32(text_width_fn(str))
+       return int(text_width_fn(str))
     }
     return callback
 }
 
-pub fn gg_r_text_height_fn(ctx &gg.Context) fn(font C.mu_Font) i32 {
+pub fn gg_r_text_height_fn(ctx &gg.Context) fn(font C.mu_Font) int {
     text_height_fn := ctx.text_height
-    callback := fn [text_height_fn] (font C.mu_Font) i32 {
+    callback := fn [text_height_fn] (font C.mu_Font) int {
     //    str := unsafe { cstring_to_vstring(text) } 
-       return i32(text_height_fn('H'))
+       return int(text_height_fn('H'))
     }
     return callback
 }
