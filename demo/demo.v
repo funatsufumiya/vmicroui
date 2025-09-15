@@ -26,6 +26,7 @@ fn main() {
 		move_fn:	   on_mouse_move,
 		keyup_fn:	   on_key_up,
 		keydown_fn:	   on_key_down,
+		scroll_fn:	   on_mouse_scroll,
 		user_data:     app
 	)
 
@@ -81,9 +82,9 @@ fn on_mouse_up(x f32, y f32, btn gg.MouseButton, app &App) {
     microui.mu_input_mouseup(app.mu, i32(x), i32(y), mu_mouse_btn(btn))
 }
 
-// fn on_mouse_scroll(dx f32, dy f32, app &App) {
-//     microui.mu_input_scroll(app.mu, dx, dy)
-// }
+fn on_mouse_scroll(ev &gg.Event, app &App) {
+    microui.mu_input_scroll(app.mu, i32(ev.mouse_dx), i32(ev.mouse_dy))
+}
 
 fn on_key_down(key gg.KeyCode, modifier gg.Modifier, app &App) {
     microui.mu_input_keydown(app.mu, i32(key))
