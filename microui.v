@@ -710,6 +710,10 @@ pub fn mu_begin_panel(ctx &C.mu_Context, name &char) {
 	mu_begin_panel_ex(ctx, name, 0)
 }
 
+// pub fn mu_min(a i32, b i32) {
+// 	return (a) < (b) ? (a) : (b)
+// }
+
 // utilities
 
 #include "microui_util.h"
@@ -718,16 +722,6 @@ pub fn C.mu_command_type (cmd &C.mu_Command) i32
 
 pub fn mu_command_type (cmd &C.mu_Command) i32 {
 	return C.mu_command_type(cmd)
-}
-
-pub fn mu_str (str_i8 []i8) string {
-	s := str_i8.map(u8(it))
-	return s.str()
-}
-
-pub fn mu_cmd_str (str_i8 [1]i8) string {
-	s := str_i8.map(u8(it))
-	return s.str()
 }
 
 pub fn mu_new_context() &C.mu_Context {
