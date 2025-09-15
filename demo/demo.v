@@ -21,6 +21,9 @@ fn main() {
 		create_window: true
 		window_title:  'microui HelloWorld'
 		frame_fn:      frame
+		click_fn:	   on_mouse_down,
+		unclick_fn:	   on_mouse_up,
+		move_fn:	   on_mouse_move,
 		user_data:     app
 	)
 
@@ -29,6 +32,45 @@ fn main() {
 	app.mu.text_width = microui.gg_r_text_width
 	app.mu.text_height = microui.gg_r_text_height
 	app.gg.run()
+}
+
+fn mu_mouse_btn(btn gg.MouseButton) i32 {
+	mut r := 0
+	match btn {
+		.left { r = microui.mu_mouse_left }
+		.right { r = microui.mu_mouse_right }
+		.middle { r = microui.mu_mouse_middle }
+		else {}
+	}
+	return i32(r)
+}
+
+fn on_mouse_move(x f32, y f32, app &App) {
+    microui.mu_input_mousemove(app.mu, i32(x), i32(y))
+}
+
+fn on_mouse_down(x f32, y f32, btn gg.MouseButton, app &App) {
+	microui.mu_input_mousedown(app.mu, i32(x), i32(y), mu_mouse_btn(btn))
+}
+
+fn on_mouse_up(x f32, y f32, btn gg.MouseButton, app &App) {
+    microui.mu_input_mouseup(app.mu, i32(x), i32(y), mu_mouse_btn(btn))
+}
+
+// fn on_mouse_scroll(dx f32, dy f32, app &App) {
+//     microui.mu_input_scroll(app.mu, dx, dy)
+// }
+
+// fn on_key_down(key gg.KeyCode, app &App) {
+//     microui.mu_input_keydown(app.mu, key)
+// }
+
+// fn on_key_up(key int, app &App) {
+//     microui.mu_input_keyup(app.mu, key)
+// }
+
+fn on_text_input(text string, app &App) {
+    microui.mu_input_text(app.mu, text.str)
 }
 
 fn frame(app &App) {
@@ -56,11 +98,11 @@ fn process_frame(app &App) {
 			match microui.mu_command_type(cmd) {
 				microui.mu_command_text { 
 					microui.gg_r_draw_text(app.gg, microui.mu_cmd_str(cmd.text.str), cmd.text.pos, cmd.text.color)
-					println("draw_text text: ${microui.mu_cmd_str(cmd.text.str)}, pos: ${cmd.text.pos}, color: ${cmd.text.color}")
+					// println("draw_text text: ${microui.mu_cmd_str(cmd.text.str)}, pos: ${cmd.text.pos}, color: ${cmd.text.color}")
 				}
 				microui.mu_command_rect {
 					microui.gg_r_draw_rect(app.gg, cmd.rect.rect, cmd.rect.color)
-					println("draw_rect rect: ${cmd.rect.rect}, color: ${cmd.rect.color}")
+					// println("draw_rect rect: ${cmd.rect.rect}, color: ${cmd.rect.color}")
 				}
 				microui.mu_command_icon {
 					// microui.gg_r_draw_icon(app.gg, cmd.icon.id, cmd.icon.rect, cmd.icon.color)
