@@ -10,7 +10,6 @@ struct App {
 mut:
 	gg    &gg.Context = unsafe { nil }
 	mu    &C.mu_Context = unsafe { nil }
-	cmd    &C.mu_Command = unsafe { nil }
 }
 
 fn main() {
@@ -48,9 +47,10 @@ fn process_frame(app &App) {
 		microui.mu_end_window(ctx)
 	}
 	microui.mu_end(ctx)
+	
+	cmd := unsafe { &C.mu_Command(nil) }
 
-	for microui.mu_next_command(ctx, &app.cmd) {
-		cmd := app.cmd
+	for microui.mu_next_command(ctx, &cmd) {
 		// println(microui.mu_command_type(cmd))
 		unsafe {
 			match microui.mu_command_type(cmd) {
