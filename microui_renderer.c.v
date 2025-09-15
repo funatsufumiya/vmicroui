@@ -16,10 +16,24 @@ pub fn gg_r_draw_rect(ctx &gg.Context, rect C.mu_Rect, color C.mu_Color) {
     ctx.draw_rect_filled(rect.x, rect.y, rect.w, rect.h, gg.Color{r: color.r, g: color.g, b: color.b, a: color.a})
 }
 
-pub fn gg_r_draw_icon(ctx &gg.Context, id int, rect C.mu_Rect, color C.mu_Color) {
-    // workaround
-    ctx.draw_rect_filled(rect.x, rect.y, rect.w, rect.h, gg.Color{r: color.r, g: color.g, b: color.b, a: color.a})
-}
+// pub fn gg_r_draw_icon(ctx &gg.Context, id int, rect C.mu_Rect, color C.mu_Color) {
+//     // workaround
+//     ctx.draw_rect_filled(rect.x, rect.y, rect.w, rect.h, gg.Color{r: color.r, g: color.g, b: color.b, a: color.a})
+
+    // mu_Rect src = atlas[id];
+//     src := C.mu_atlas[id]
+//     x := rect.x + (rect.w - src.w) / 2
+//     y := rect.y + (rect.h - src.h) / 2
+//     rct := C.mu_Rect{x, y, src.w, src.h}
+//     ctx.push_quad(rct, src, color);
+// }
+
+// void r_draw_icon(int id, mu_Rect rect, mu_Color color) {
+//   mu_Rect src = atlas[id];
+//   int x = rect.x + (rect.w - src.w) / 2;
+//   int y = rect.y + (rect.h - src.h) / 2;
+//   push_quad(mu_rect(x, y, src.w, src.h), src, color);
+// }
 
 // static void flush(void) {
 //   if (buf_idx == 0) { return; }

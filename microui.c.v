@@ -5,6 +5,7 @@ module microui
 
 #include "microui.h"
 #include "microui.c"
+#include "atlas.inl"
 
 //
 //* Copyright (c) 2024 rxi
