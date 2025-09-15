@@ -1,8 +1,12 @@
-## vmicroui
+# vmicroui
 
 ![docs/screenshot.png](docs/screenshot.png)
 
 V-lang port of [microui](github.com/rxi/microui)
+
+## Usage
+
+[demo.v](https://github.com/funatsufumiya/vmicroui/blob/main/demo/demo.v)
 
 ```bash
 $ git clone https://github.com/funatsufumiya/vmicroui ~/.vmodules/microui
