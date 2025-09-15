@@ -3,8 +3,8 @@ module main
 import gg
 import microui
 
-const win_width = 400
-const win_height = 300
+const win_width = 600
+const win_height = 400
 
 struct App {
 mut:
