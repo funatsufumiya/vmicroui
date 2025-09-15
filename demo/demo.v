@@ -50,7 +50,7 @@ fn frame(app &App) {
 fn process_frame(app &App) {
 	mut ctx := app.mu
 	microui.mu_begin(ctx)
-	rect := C.mu_Rect{50, 50, 300, 100}
+	rect := C.mu_Rect{50, 50, 300, 150}
 	if microui.mu_begin_window(ctx, c'Hello', rect) {
 		microui.mu_label(ctx, c'Hello, microui!')
 
