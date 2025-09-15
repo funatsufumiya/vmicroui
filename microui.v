@@ -598,13 +598,13 @@ pub fn mu_textbox_ex(ctx &C.mu_Context, buf &char, bufsz i32, opt i32) i32 {
 
 fn C.mu_slider_ex(ctx &C.mu_Context, value &C.mu_Real, low C.mu_Real, high C.mu_Real, step C.mu_Real, fmt &char, opt i32) i32
 
-pub fn mu_slider_ex(ctx &C.mu_Context, value &C.mu_Real, low C.mu_Real, high C.mu_Real, step C.mu_Real, fmt &char, opt i32) i32 {
+pub fn mu_slider_ex(ctx &C.mu_Context, value &f32, low f32, high f32, step f32, fmt &char, opt i32) i32 {
 	return C.mu_slider_ex(ctx, value, low, high, step, fmt, opt)
 }
 
 fn C.mu_number_ex(ctx &C.mu_Context, value &C.mu_Real, step C.mu_Real, fmt &char, opt i32) i32
 
-pub fn mu_number_ex(ctx &C.mu_Context, value &C.mu_Real, step C.mu_Real, fmt &char, opt i32) i32 {
+pub fn mu_number_ex(ctx &C.mu_Context, value &f32, step f32, fmt &char, opt i32) i32 {
 	return C.mu_number_ex(ctx, value, step, fmt, opt)
 }
 
@@ -686,11 +686,11 @@ pub fn mu_textbox(ctx &C.mu_Context, buf &char, bufsz i32) i32 {
 	return mu_textbox_ex(ctx, buf, bufsz, 0)
 }
 
-pub fn mu_slider(ctx &C.mu_Context, value &C.mu_Real, lo C.mu_Real, hi C.mu_Real) i32 {
+pub fn mu_slider(ctx &C.mu_Context, value &f32, lo f32, hi f32) i32 {
 	return mu_slider_ex(ctx, value, lo, hi, 0, c'%.3g', mu_opt_aligncenter)
 }
 
-pub fn mu_number(ctx &C.mu_Context, value &C.mu_Real, step C.mu_Real) i32 {
+pub fn mu_number(ctx &C.mu_Context, value &f32, step f32) i32 {
 	return mu_number_ex(ctx, value, step, c'%.3g', mu_opt_aligncenter)
 }
 

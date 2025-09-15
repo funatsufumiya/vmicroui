@@ -10,6 +10,7 @@ struct App {
 mut:
 	gg    &gg.Context = unsafe { nil }
 	mu    &C.mu_Context = unsafe { nil }
+	slider_val f32 = 1.0
 }
 
 fn main() {
@@ -32,8 +33,8 @@ fn main() {
 
 	app.mu = microui.mu_new_context()
 	microui.mu_init(app.mu)
-	app.mu.text_width = microui.gg_r_text_width
-	app.mu.text_height = microui.gg_r_text_height
+	app.mu.text_width = microui.gg_r_text_width_fn(app.gg)
+	app.mu.text_height = microui.gg_r_text_height_fn(app.gg)
 	app.gg.run()
 }
 
@@ -111,13 +112,24 @@ fn process_frame(app &App) {
 	if microui.mu_begin_window(ctx, c'Hello', rect) {
 		microui.mu_layout_row(ctx, 1, [i32(280)], 0)
 		microui.mu_label(ctx, c'Hello, microui!')
+		microui.mu_layout_row(ctx, 2, [i32(80), i32(-1)], 0)
+
+		if microui.mu_button(ctx, c'Click Me') != 0 {
+			println('Button was pressed!')
+		}
+
+		microui.mu_layout_row(ctx, 2, [i32(80), i32(-1)], 0)
+		microui.mu_label(ctx, c'Slider:')
+		microui.mu_slider(ctx, &app.slider_val, 0, 100)
+		// microui.mu_label(ctx, ('Value: ${slider_val:.1f}').str)
+
 		microui.mu_end_window(ctx)
 	}
 	microui.mu_end(ctx)
 	
 	cmd := unsafe { &C.mu_Command(nil) }
 
-	println("start")
+	// println("start")
 
 	for microui.mu_next_command(ctx, &cmd) {
 		// println(microui.mu_command_type(cmd))
@@ -128,7 +140,7 @@ fn process_frame(app &App) {
 				}
 				microui.mu_command_rect {
 					microui.gg_r_draw_rect(app.gg, cmd.rect.rect, cmd.rect.color)
-					println("draw_rect rect: ${cmd.rect.rect}, color: ${cmd.rect.color}")
+					// println("draw_rect rect: ${cmd.rect.rect}, color: ${cmd.rect.color}")
 				}
 				microui.mu_command_icon {
 					// microui.gg_r_draw_icon(app.gg, cmd.icon.id, cmd.icon.rect, cmd.icon.color)
