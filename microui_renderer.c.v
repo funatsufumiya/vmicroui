@@ -21,9 +21,33 @@ pub fn gg_r_draw_icon(ctx &gg.Context, id int, rect C.mu_Rect, color C.mu_Color)
     ctx.draw_rect_filled(rect.x, rect.y, rect.w, rect.h, gg.Color{r: color.r, g: color.g, b: color.b, a: color.a})
 }
 
+// static void flush(void) {
+//   if (buf_idx == 0) { return; }
+
+//   glViewport(0, 0, width, height);
+//   glMatrixMode(GL_PROJECTION);
+//   glPushMatrix();
+//   glLoadIdentity();
+//   glOrtho(0.0f, width, height, 0.0f, -1.0f, +1.0f);
+//   glMatrixMode(GL_MODELVIEW);
+//   glPushMatrix();
+//   glLoadIdentity();
+
+//   glTexCoordPointer(2, GL_FLOAT, 0, tex_buf);
+//   glVertexPointer(2, GL_FLOAT, 0, vert_buf);
+//   glColorPointer(4, GL_UNSIGNED_BYTE, 0, color_buf);
+//   glDrawElements(GL_TRIANGLES, buf_idx * 6, GL_UNSIGNED_INT, index_buf);
+
+//   glMatrixMode(GL_MODELVIEW);
+//   glPopMatrix();
+//   glMatrixMode(GL_PROJECTION);
+//   glPopMatrix();
+
+//   buf_idx = 0;
+// }
+
 pub fn gg_r_set_clip_rect(ctx &gg.Context, rect C.mu_Rect) {
-    // ctx.set_clip_rect(rect.x, rect.y, rect.w, rect.h)
-    // currently do nothing
+    ctx.scissor_rect(rect.x, rect.y, rect.w, rect.h)
 }
 
 pub fn gg_r_text_width_fn(ctx &gg.Context) fn(font C.mu_Font, text &char, len int) int {
@@ -151,6 +175,7 @@ pub fn gg_r_render(ctx &C.mu_Context, gg_ctx &gg.Context) {
 					// microui.gg_r_draw_icon(gg_ctx, cmd.icon.id, cmd.icon.rect, cmd.icon.color)
 				}
 				microui.mu_command_clip {
+					microui.gg_r_set_clip_rect(gg_ctx, cmd.clip.rect)
 				}
 				else {}
 			}

@@ -52,12 +52,15 @@ fn process_frame(app &App) {
 	microui.mu_begin(ctx)
 	rect := C.mu_Rect{50, 50, 300, 150}
 	if microui.mu_begin_window(ctx, c'Hello', rect) {
+		microui.mu_layout_row(ctx, 1, [280], 0)
 		microui.mu_label(ctx, c'Hello, microui!')
+		microui.mu_layout_row(ctx, 1, [80], 0)
 
 		if microui.mu_button(ctx, c'Click Me') {
 			println('Button was pressed!')
 		}
 
+		microui.mu_layout_row(ctx, 2, [80, -1], 0)
 		microui.mu_label(ctx, c'Slider:')
 		microui.mu_slider(ctx, &app.slider_val, 0, 100)
 

@@ -5,7 +5,7 @@
 V-lang port of [microui](https://github.com/rxi/microui)
 
 > [!WARNING]
-> Currently `icon` and `clip_rect` is not implemented.
+> Currently `icon` is not implemented.
 
 ## Usage
 
