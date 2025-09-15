@@ -1,4 +1,3 @@
-@[translated]
 module microui
 
 #flag -I @VMODROOT/c/microui
@@ -725,5 +724,5 @@ pub fn mu_command_type (cmd &C.mu_Command) int {
 }
 
 pub fn mu_new_context() &C.mu_Context {
-	return C.malloc(sizeof(C.mu_Context))
+	return unsafe { C.malloc(sizeof(C.mu_Context)) }
 }
