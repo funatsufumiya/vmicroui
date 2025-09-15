@@ -79,7 +79,7 @@ pub const mu_key_backspace = 1 << 3
 pub const mu_key_return = 1 << 4
 
 type Mu_Id = u32
-type Mu_Real = f32
+// type Mu_Real = f32
 type Mu_Font = voidptr
 
 pub struct Mu_Vec2 {
@@ -285,8 +285,8 @@ pub mut:
 	input_text     [32]i8
 }
 
-pub fn new_context() &Mu_Context {
-	return C.malloc(sizeof(Mu_Context))
+pub fn mu_new_context() &Mu_Context {
+	return unsafe { C.malloc(sizeof(Mu_Context)) }
 }
 
 //
@@ -1010,8 +1010,13 @@ pub fn mu_label(ctx &Mu_Context, text string) {
 	mu_draw_control_text(ctx, &ctext, mu_layout_next(ctx), mu_color_text, 0)
 }
 
-pub fn mu_button_ex(ctx &Mu_Context, label &char, icon int, opt int) int {
-	res := 0
+pub fn mu_button_ex(ctx &Mu_Context, label string, icon int, opt int) bool {
+	clabel := c'${label}'
+	return mu_button_ex_impl(ctx, &clabel, icon, mu_opt_aligncenter)
+}
+
+fn mu_button_ex_impl(ctx &Mu_Context, label &char, icon int, opt int) bool {
+	res := false
 	id := if label {
 		mu_get_id(ctx, label, C.strlen(label))
 	} else {
@@ -1021,7 +1026,7 @@ pub fn mu_button_ex(ctx &Mu_Context, label &char, icon int, opt int) int {
 	mu_update_control(ctx, id, r, opt)
 	// handle click
 	if ctx.mouse_pressed == mu_mouse_left && ctx.focus == id {
-		res |= mu_res_submit
+		res |= (mu_res_submit != 0)
 	}
 	// draw
 	mu_draw_control_frame(ctx, id, r, mu_color_button, opt)
@@ -1107,7 +1112,7 @@ pub fn mu_textbox_raw(ctx &Mu_Context, buf &char, bufsz int, id Mu_Id, r Mu_Rect
 	return res
 }
 
-pub fn number_textbox(ctx &Mu_Context, value &Mu_Real, r Mu_Rect, id Mu_Id) int {
+pub fn number_textbox(ctx &Mu_Context, value &f32, r Mu_Rect, id Mu_Id) int {
 	if ctx.mouse_pressed == mu_mouse_left && ctx.key_down & mu_key_shift && ctx.hover == id {
 		ctx.number_edit = id
 		C.sprintf(ctx.number_edit_buf, c'%.3g', *value)
@@ -1118,7 +1123,7 @@ pub fn number_textbox(ctx &Mu_Context, value &Mu_Real, r Mu_Rect, id Mu_Id) int 
 		if res & mu_res_submit || ctx.focus != id {
 			buf := ctx.number_edit_buf.map(u8(it))[..]
 			s := buf.bytestr()
-			*value = strconv.atof64(s) or { unsafe {nil} }
+			*value = &f32(strconv.atof64(s) or { unsafe {nil} })
 			ctx.number_edit = 0
 		} else {
 			return 1
@@ -1133,7 +1138,7 @@ pub fn mu_textbox_ex(ctx &Mu_Context, buf &char, bufsz int, opt int) int {
 	return mu_textbox_raw(ctx, buf, bufsz, id, r, opt)
 }
 
-pub fn mu_slider_ex(ctx &Mu_Context, value &Mu_Real, low Mu_Real, high Mu_Real, step Mu_Real, fmt &char, opt int) int {
+pub fn mu_slider_ex(ctx &Mu_Context, value &f32, low f32, high f32, step f32, fmt &char, opt int) int {
 	buf := [128]i8{}
 	thumb := Mu_Rect{}
 	x := 0
@@ -1179,7 +1184,7 @@ pub fn mu_slider_ex(ctx &Mu_Context, value &Mu_Real, low Mu_Real, high Mu_Real, 
 	return res
 }
 
-pub fn mu_number_ex(ctx &Mu_Context, value &Mu_Real, step Mu_Real, fmt &char, opt int) int {
+pub fn mu_number_ex(ctx &Mu_Context, value &f32, step f32, fmt &char, opt int) int {
 	buf := [128]i8{}
 	res := 0
 	id := mu_get_id(ctx, &value, sizeof(value))
@@ -1558,7 +1563,7 @@ pub fn mu_end_panel(ctx &Mu_Context) {
 // #define mu_begin_panel(ctx, name)         mu_begin_panel_ex(ctx, name, 0)
 
 // V equivalents for the above macros
-pub fn mu_button(ctx &Mu_Context, label &char) int {
+pub fn mu_button(ctx &Mu_Context, label string) bool {
 	return mu_button_ex(ctx, label, 0, mu_opt_aligncenter)
 }
 
@@ -1566,11 +1571,11 @@ pub fn mu_textbox(ctx &Mu_Context, buf &char, bufsz int) int {
 	return mu_textbox_ex(ctx, buf, bufsz, 0)
 }
 
-pub fn mu_slider(ctx &Mu_Context, value &Mu_Real, lo Mu_Real, hi Mu_Real) int {
+pub fn mu_slider(ctx &Mu_Context, value &f32, lo f32, hi f32) int {
 	return mu_slider_ex(ctx, value, lo, hi, 0, c'%.3g', mu_opt_aligncenter)
 }
 
-pub fn mu_number(ctx &Mu_Context, value &Mu_Real, step Mu_Real) int {
+pub fn mu_number(ctx &Mu_Context, value &f32, step f32) int {
 	return mu_number_ex(ctx, value, step, c'%.3g', mu_opt_aligncenter)
 }
 
