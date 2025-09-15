@@ -24,6 +24,8 @@ fn main() {
 		click_fn:	   on_mouse_down,
 		unclick_fn:	   on_mouse_up,
 		move_fn:	   on_mouse_move,
+		keyup_fn:	   on_key_up,
+		keydown_fn:	   on_key_down,
 		user_data:     app
 	)
 
@@ -45,6 +47,28 @@ fn mu_mouse_btn(btn gg.MouseButton) i32 {
 	return i32(r)
 }
 
+// static const char key_map[256] = {
+//   [ SDLK_LSHIFT       & 0xff ] = MU_KEY_SHIFT,
+//   [ SDLK_RSHIFT       & 0xff ] = MU_KEY_SHIFT,
+//   [ SDLK_LCTRL        & 0xff ] = MU_KEY_CTRL,
+//   [ SDLK_RCTRL        & 0xff ] = MU_KEY_CTRL,
+//   [ SDLK_LALT         & 0xff ] = MU_KEY_ALT,
+//   [ SDLK_RALT         & 0xff ] = MU_KEY_ALT,
+//   [ SDLK_RETURN       & 0xff ] = MU_KEY_RETURN,
+//   [ SDLK_BACKSPACE    & 0xff ] = MU_KEY_BACKSPACE,
+// };
+
+// fn mu_key(btn gg.KeyCode) i32 {
+// 	mut r := 0
+// 	match btn {
+// 		.left { r = microui.mu_mouse_left }
+// 		.right { r = microui.mu_mouse_right }
+// 		.middle { r = microui.mu_mouse_middle }
+// 		else {}
+// 	}
+// 	return i32(r)
+// }
+
 fn on_mouse_move(x f32, y f32, app &App) {
     microui.mu_input_mousemove(app.mu, i32(x), i32(y))
 }
@@ -61,13 +85,13 @@ fn on_mouse_up(x f32, y f32, btn gg.MouseButton, app &App) {
 //     microui.mu_input_scroll(app.mu, dx, dy)
 // }
 
-// fn on_key_down(key gg.KeyCode, app &App) {
-//     microui.mu_input_keydown(app.mu, key)
-// }
+fn on_key_down(key gg.KeyCode, modifier gg.Modifier, app &App) {
+    microui.mu_input_keydown(app.mu, i32(key))
+}
 
-// fn on_key_up(key int, app &App) {
-//     microui.mu_input_keyup(app.mu, key)
-// }
+fn on_key_up(key gg.KeyCode, modifier gg.Modifier, app &App) {
+    microui.mu_input_keyup(app.mu, i32(key))
+}
 
 fn on_text_input(text string, app &App) {
     microui.mu_input_text(app.mu, text.str)
