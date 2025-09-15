@@ -369,8 +369,8 @@ pub fn mu_get_clip_rect(ctx &C.mu_Context) C.mu_Rect {
 
 fn C.mu_check_clip(ctx &C.mu_Context, r C.mu_Rect) int
 
-pub fn mu_check_clip(ctx &C.mu_Context, r C.mu_Rect) int {
-	return C.mu_check_clip(ctx, r)
+pub fn mu_check_clip(ctx &C.mu_Context, r C.mu_Rect) bool {
+	return C.mu_check_clip(ctx, r) != 0
 }
 
 fn C.mu_get_current_container(ctx &C.mu_Context) &C.mu_Container
@@ -393,14 +393,14 @@ pub fn mu_bring_to_front(ctx &C.mu_Context, cnt &C.mu_Container) {
 
 fn C.mu_pool_init(ctx &C.mu_Context, items &C.mu_PoolItem, len int, id C.mu_Id) int
 
-pub fn mu_pool_init(ctx &C.mu_Context, items &C.mu_PoolItem, len int, id C.mu_Id) int {
-	return C.mu_pool_init(ctx, items, len, id)
+pub fn mu_pool_init(ctx &C.mu_Context, items &C.mu_PoolItem, len int, id C.mu_Id) bool {
+	return C.mu_pool_init(ctx, items, len, id) != 0
 }
 
 fn C.mu_pool_get(ctx &C.mu_Context, items &C.mu_PoolItem, len int, id C.mu_Id) int
 
-pub fn mu_pool_get(ctx &C.mu_Context, items &C.mu_PoolItem, len int, id C.mu_Id) int {
-	return C.mu_pool_get(ctx, items, len, id)
+pub fn mu_pool_get(ctx &C.mu_Context, items &C.mu_PoolItem, len int, id C.mu_Id) bool {
+	return C.mu_pool_get(ctx, items, len, id) != 0
 }
 
 fn C.mu_pool_update(ctx &C.mu_Context, items &C.mu_PoolItem, idx int)
@@ -460,7 +460,7 @@ pub fn mu_push_command(ctx &C.mu_Context, type_ int, size int) &C.mu_Command {
 fn C.mu_next_command(ctx &C.mu_Context, cmd &&C.mu_Command) int
 
 pub fn mu_next_command(ctx &C.mu_Context, cmd &&C.mu_Command) bool {
-	return C.mu_next_command(ctx, cmd) == 1
+	return C.mu_next_command(ctx, cmd) != 0
 }
 
 fn C.mu_set_clip(ctx &C.mu_Context, rect C.mu_Rect)
@@ -549,8 +549,8 @@ pub fn mu_draw_control_text(ctx &C.mu_Context, str &char, rect C.mu_Rect, colori
 
 fn C.mu_mouse_over(ctx &C.mu_Context, rect C.mu_Rect) int
 
-pub fn mu_mouse_over(ctx &C.mu_Context, rect C.mu_Rect) int {
-	return C.mu_mouse_over(ctx, rect)
+pub fn mu_mouse_over(ctx &C.mu_Context, rect C.mu_Rect) bool {
+	return C.mu_mouse_over(ctx, rect) != 0
 }
 
 fn C.mu_update_control(ctx &C.mu_Context, id C.mu_Id, rect C.mu_Rect, opt int)
@@ -573,50 +573,50 @@ pub fn mu_label(ctx &C.mu_Context, text &char) {
 
 fn C.mu_button_ex(ctx &C.mu_Context, label &char, icon int, opt int) int
 
-pub fn mu_button_ex(ctx &C.mu_Context, label &char, icon int, opt int) int {
-	return C.mu_button_ex(ctx, label, icon, opt)
+pub fn mu_button_ex(ctx &C.mu_Context, label &char, icon int, opt int) bool {
+	return C.mu_button_ex(ctx, label, icon, opt) != 0
 }
 
 fn C.mu_checkbox(ctx &C.mu_Context, label &char, state &int) int
 
-pub fn mu_checkbox(ctx &C.mu_Context, label &char, state &int) int {
-	return C.mu_checkbox(ctx, label, state)
+pub fn mu_checkbox(ctx &C.mu_Context, label &char, state &int) bool {
+	return C.mu_checkbox(ctx, label, state) != 0
 }
 
 fn C.mu_textbox_raw(ctx &C.mu_Context, buf &char, bufsz int, id C.mu_Id, r C.mu_Rect, opt int) int
 
-pub fn mu_textbox_raw(ctx &C.mu_Context, buf &char, bufsz int, id C.mu_Id, r C.mu_Rect, opt int) int {
-	return C.mu_textbox_raw(ctx, buf, bufsz, id, r, opt)
+pub fn mu_textbox_raw(ctx &C.mu_Context, buf &char, bufsz int, id C.mu_Id, r C.mu_Rect, opt int) bool {
+	return C.mu_textbox_raw(ctx, buf, bufsz, id, r, opt) != 0
 }
 
 fn C.mu_textbox_ex(ctx &C.mu_Context, buf &char, bufsz int, opt int) int
 
-pub fn mu_textbox_ex(ctx &C.mu_Context, buf &char, bufsz int, opt int) int {
-	return C.mu_textbox_ex(ctx, buf, bufsz, opt)
+pub fn mu_textbox_ex(ctx &C.mu_Context, buf &char, bufsz int, opt int) bool {
+	return C.mu_textbox_ex(ctx, buf, bufsz, opt) != 0
 }
 
 fn C.mu_slider_ex(ctx &C.mu_Context, value &C.mu_Real, low C.mu_Real, high C.mu_Real, step C.mu_Real, fmt &char, opt int) int
 
-pub fn mu_slider_ex(ctx &C.mu_Context, value &f32, low f32, high f32, step f32, fmt &char, opt int) int {
-	return C.mu_slider_ex(ctx, value, low, high, step, fmt, opt)
+pub fn mu_slider_ex(ctx &C.mu_Context, value &f32, low f32, high f32, step f32, fmt &char, opt int) bool {
+	return C.mu_slider_ex(ctx, value, low, high, step, fmt, opt) != 0
 }
 
 fn C.mu_number_ex(ctx &C.mu_Context, value &C.mu_Real, step C.mu_Real, fmt &char, opt int) int
 
-pub fn mu_number_ex(ctx &C.mu_Context, value &f32, step f32, fmt &char, opt int) int {
-	return C.mu_number_ex(ctx, value, step, fmt, opt)
+pub fn mu_number_ex(ctx &C.mu_Context, value &f32, step f32, fmt &char, opt int) bool {
+	return C.mu_number_ex(ctx, value, step, fmt, opt) != 0
 }
 
 fn C.mu_header_ex(ctx &C.mu_Context, label &char, opt int) int
 
-pub fn mu_header_ex(ctx &C.mu_Context, label &char, opt int) int {
-	return C.mu_header_ex(ctx, label, opt)
+pub fn mu_header_ex(ctx &C.mu_Context, label &char, opt int) bool {
+	return C.mu_header_ex(ctx, label, opt) != 0
 }
 
 fn C.mu_begin_treenode_ex(ctx &C.mu_Context, label &char, opt int) int
 
-pub fn mu_begin_treenode_ex(ctx &C.mu_Context, label &char, opt int) int {
-	return C.mu_begin_treenode_ex(ctx, label, opt)
+pub fn mu_begin_treenode_ex(ctx &C.mu_Context, label &char, opt int) bool {
+	return C.mu_begin_treenode_ex(ctx, label, opt) != 0
 }
 
 fn C.mu_end_treenode(ctx &C.mu_Context)
@@ -628,7 +628,7 @@ pub fn mu_end_treenode(ctx &C.mu_Context) {
 fn C.mu_begin_window_ex(ctx &C.mu_Context, title &char, rect C.mu_Rect, opt int) int
 
 pub fn mu_begin_window_ex(ctx &C.mu_Context, title &char, rect C.mu_Rect, opt int) bool {
-	return C.mu_begin_window_ex(ctx, title, rect, opt) == 1
+	return C.mu_begin_window_ex(ctx, title, rect, opt) != 0
 }
 
 fn C.mu_end_window(ctx &C.mu_Context)
@@ -645,8 +645,8 @@ pub fn mu_open_popup(ctx &C.mu_Context, name &char) {
 
 fn C.mu_begin_popup(ctx &C.mu_Context, name &char) int
 
-pub fn mu_begin_popup(ctx &C.mu_Context, name &char) int {
-	return C.mu_begin_popup(ctx, name)
+pub fn mu_begin_popup(ctx &C.mu_Context, name &char) bool {
+	return C.mu_begin_popup(ctx, name) != 0
 }
 
 fn C.mu_end_popup(ctx &C.mu_Context)
@@ -677,27 +677,27 @@ pub fn mu_end_panel(ctx &C.mu_Context) {
 // #define mu_begin_panel(ctx, name)         mu_begin_panel_ex(ctx, name, 0)
 
 // V equivalents for the above macros
-pub fn mu_button(ctx &C.mu_Context, label &char) int {
+pub fn mu_button(ctx &C.mu_Context, label &char) bool {
 	return mu_button_ex(ctx, label, 0, mu_opt_aligncenter)
 }
 
-pub fn mu_textbox(ctx &C.mu_Context, buf &char, bufsz int) int {
+pub fn mu_textbox(ctx &C.mu_Context, buf &char, bufsz int) bool {
 	return mu_textbox_ex(ctx, buf, bufsz, 0)
 }
 
-pub fn mu_slider(ctx &C.mu_Context, value &f32, lo f32, hi f32) int {
+pub fn mu_slider(ctx &C.mu_Context, value &f32, lo f32, hi f32) bool {
 	return mu_slider_ex(ctx, value, lo, hi, 0, c'%.3g', mu_opt_aligncenter)
 }
 
-pub fn mu_number(ctx &C.mu_Context, value &f32, step f32) int {
+pub fn mu_number(ctx &C.mu_Context, value &f32, step f32) bool {
 	return mu_number_ex(ctx, value, step, c'%.3g', mu_opt_aligncenter)
 }
 
-pub fn mu_header(ctx &C.mu_Context, label &char) int {
+pub fn mu_header(ctx &C.mu_Context, label &char) bool {
 	return mu_header_ex(ctx, label, 0)
 }
 
-pub fn mu_begin_treenode(ctx &C.mu_Context, label &char) int {
+pub fn mu_begin_treenode(ctx &C.mu_Context, label &char) bool {
 	return mu_begin_treenode_ex(ctx, label, 0)
 }
 

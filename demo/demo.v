@@ -54,7 +54,7 @@ fn process_frame(app &App) {
 	if microui.mu_begin_window(ctx, c'Hello', rect) {
 		microui.mu_label(ctx, c'Hello, microui!')
 
-		if microui.mu_button(ctx, c'Click Me') != 0 {
+		if microui.mu_button(ctx, c'Click Me') {
 			println('Button was pressed!')
 		}
 
