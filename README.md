@@ -2,7 +2,7 @@
 
 ![docs/screenshot.png](docs/screenshot.png)
 
-V-lang port of [microui](github.com/rxi/microui)
+V-lang port of [microui](https://github.com/rxi/microui)
 
 ## Usage
 
