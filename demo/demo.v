@@ -65,32 +65,5 @@ fn process_frame(app &App) {
 	}
 	microui.mu_end(ctx)
 	
-	cmd := unsafe { &C.mu_Command(nil) }
-
-	// println("start")
-
-	for microui.mu_next_command(ctx, &cmd) {
-		// println(microui.mu_command_type(cmd))
-		unsafe {
-			match microui.mu_command_type(cmd) {
-				microui.mu_command_text { 
-					microui.gg_r_draw_text(app.gg, &char(cmd.text.str), cmd.text.pos, cmd.text.color)
-				}
-				microui.mu_command_rect {
-					microui.gg_r_draw_rect(app.gg, cmd.rect.rect, cmd.rect.color)
-					// println("draw_rect rect: ${cmd.rect.rect}, color: ${cmd.rect.color}")
-				}
-				microui.mu_command_icon {
-					// microui.gg_r_draw_icon(app.gg, cmd.icon.id, cmd.icon.rect, cmd.icon.color)
-				}
-				microui.mu_command_clip {
-				}
-				else {}
-			}
-		}
-        // case MU_COMMAND_TEXT: r_draw_text(cmd->text.str, cmd->text.pos, cmd->text.color); break;
-        // case MU_COMMAND_RECT: r_draw_rect(cmd->rect.rect, cmd->rect.color); break;
-        // case MU_COMMAND_ICON: r_draw_icon(cmd->icon.id, cmd->icon.rect, cmd->icon.color); break;
-        // case MU_COMMAND_CLIP: r_set_clip_rect(cmd->clip.rect); break;
-	}
+	microui.gg_r_render(ctx, app.gg)
 }
