@@ -25,7 +25,7 @@ $ v -g -cc clang -keepc demo/demo.v
 
 ## TODOs
 
-- I'd like to port whole of [sgl microui](https://floooh.github.io/sokol-html5/sgl-microui-sapp.html) into V.
+- Port whole part of [sgl microui](https://floooh.github.io/sokol-html5/sgl-microui-sapp.html) into V.
 
 ----
 
